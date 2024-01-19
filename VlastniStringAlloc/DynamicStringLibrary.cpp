@@ -59,7 +59,7 @@ char* DynamicStringLibrary::ConcatenateDynamicString(const char* str, const char
 		if (CheckForBufferOverflow(buffer, currentIndex, _currentBufferAlloc) == false)
 			throw std::exception("Failed to initialize buffer!");
 
-		buffer[currentIndex] = ' ';
+		buffer[currentIndex] = splitter;
 	}
 
 	while (concate[currentIndex] != '\0')
