@@ -21,13 +21,13 @@
     <ClCompile Include="DynamicStringLibrary.cpp">
       <Filter>Source Files\DynamicStringAllocation</Filter>
     </ClCompile>
-    <ClCompile Include="VlastniStringAlloc.cpp">
-      <Filter>Source Files\DynamicStringAllocation</Filter>
+    <ClCompile Include="Program.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DynamicStringLibrary.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\DynamicStringAllocation</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -129,7 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DynamicStringLibrary.cpp" />
-    <ClCompile Include="VlastniStringAlloc.cpp" />
+    <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DynamicStringLibrary.h" />
