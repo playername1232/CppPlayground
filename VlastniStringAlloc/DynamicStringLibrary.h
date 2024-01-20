@@ -10,7 +10,7 @@ public:
     /// <summary>
     /// Creates new Dynamic String
     /// </summary>
-    /// <param name="str">Char array new Dynamic String is gonna be created based on</param>
+    /// <param name="str">Char array new Dynamic String is created based on</param>
     /// <param name="len">Length of char array</param>
     /// <returns>Dynamically created Memory pointer</returns>
 	static char* CreateDynamicString(const char* str, size_t len);
