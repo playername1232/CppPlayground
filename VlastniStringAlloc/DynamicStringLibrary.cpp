@@ -2,6 +2,13 @@
 #include <iostream>
 #include <cctype>
 
+/// <summary>
+/// Checks for buffer overflow, increases memory allocation if the overflow would occur
+/// </summary>
+/// <param name="arr">Allocated Memory</param>
+/// <param name="index">Used index</param>
+/// <param name="bufferAllocSize">Allocated size</param>
+/// <returns></returns>
 static bool CheckForBufferOverflow(char*& arr, size_t index, int& bufferAllocSize)
 {
 	if (arr == nullptr)
@@ -19,7 +26,6 @@ static bool CheckForBufferOverflow(char*& arr, size_t index, int& bufferAllocSiz
 	}
 	return true;
 }
-
 
 char* DynamicStringLibrary::CreateDynamicString(const char* str, size_t len)
 {
@@ -52,7 +58,6 @@ char* DynamicStringLibrary::CreateDynamicString(const char* str, size_t len)
 	else
 		return nullptr;
 }
-
 
 char* DynamicStringLibrary::ConcatenateDynamicString(const char* str, const char* concate, const char splitter)
 {
@@ -110,12 +115,6 @@ void DynamicStringLibrary::DeleteDynamicString(const char** arrToFree, size_t nu
 		InnerFree(const_cast<char*>(arrToFree[idx]));
 }
 
-/// <summary>
-/// Extracts string from entry string
-/// </summary>
-/// <param name="str">Entry string</param>
-/// <param name="extractStr">string to remove</param>
-/// <param name="sizeExtract">size of string to remove - Make sure to use only amount of characters excluding the null terminator</param>
 void DynamicStringLibrary::ExtractFirstDynamicString(char*& str, const char* extractStr, size_t sizeExtract)
 {
 	size_t strSize = 0;
