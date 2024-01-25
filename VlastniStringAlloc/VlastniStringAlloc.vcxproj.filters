@@ -16,6 +16,9 @@
     <Filter Include="Source Files\DynamicStringAllocation">
       <UniqueIdentifier>{025b5d3f-b4d7-43db-8efd-2998ff9e7029}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\DynamicArray">
+      <UniqueIdentifier>{16ecb7f3-d402-472e-93c7-3143a0e5ef07}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DynamicStringLibrary.cpp">
@@ -24,10 +27,16 @@
     <ClCompile Include="Program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="List.cpp">
+      <Filter>Source Files\DynamicArray</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DynamicStringLibrary.h">
       <Filter>Source Files\DynamicStringAllocation</Filter>
+    </ClInclude>
+    <ClInclude Include="List.h">
+      <Filter>Source Files\DynamicArray</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

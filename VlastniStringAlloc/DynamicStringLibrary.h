@@ -1,5 +1,8 @@
 #pragma once
+
+#ifndef DYNAMICSTRING
 #include <malloc.h>
+#endif
 
 #define InnerFree(ptr) { free(ptr); }
 

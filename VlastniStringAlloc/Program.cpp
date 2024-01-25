@@ -1,13 +1,14 @@
 ﻿#include <iostream>
 #include <string>
 #include "DynamicStringLibrary.h"
+#include "List.h"
 
 using namespace std;
 
-int main()
+void TestDynamicStringAllocation()
 {
     char* myarr = DynamicStringLibrary::CreateDynamicString("ahojky jak se mas?", 19);
-    char xd[11] = { 'c', 'a', 'u', 'k', 'y', ' ', 's', 'u', ' ', 'o', 'k'};
+    char xd[11] = { 'c', 'a', 'u', 'k', 'y', ' ', 's', 'u', ' ', 'o', 'k' };
     char* myarr2 = DynamicStringLibrary::CreateDynamicString(xd, 11);
 
 
@@ -30,4 +31,17 @@ int main()
     char* reverse = DynamicStringLibrary::ReverseDynamicString("abcde");
     cout << "Reversed: " << reverse << endl;
     cin;
+}
+
+int main()
+{
+    List<int> xd;
+
+    xd.Add(10);
+    xd.Add(35);
+
+    for (int i = 0; i < xd.GetCount(); i++)
+    {
+        cout << "xd[" << i << "] = " << xd[i] << endl;
+    }
 }
