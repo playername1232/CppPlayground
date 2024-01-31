@@ -42,8 +42,8 @@ public:
 	/// <param name="item"></param>
 	void Add(T item)
 	{
-		T* buffer;
-		CollectionSize += 1;
+		T* buffer = nullptr;
+		this->CollectionSize += 1;
 
 		size_t _sizePerElement = sizeof(T);
 
@@ -61,8 +61,7 @@ public:
 			oss << item;
 
 			std::string pom = oss.str();
-			char* strBuffer = const_cast<char*>(pom.c_str()); // "error C2440: 'initializing': cannot convert from 'const _Elem *' to 'char *'"
-															  // When I tried to do it in one step oss.str().c_str() ... Bullshit :D
+			char* strBuffer = _strdup(pom.c_str());
 
 			if (strBuffer == nullptr)
 				throw std::exception("List.h has thrown an exception: ostringstream returned nullptr on strBuffer!");
@@ -94,18 +93,15 @@ public:
 
 				buffer = (T*)calloc(1, sizeof(char*));
 
-				buffer[CollectionSize - 1] = (*(T*)calloc(1, strSize));
-
-				std::istringstream istream(strBuffer);
-				istream >> buffer[CollectionSize - 1];
+				buffer[CollectionSize - 1] = (T)_strdup(strBuffer); // Tady to crashuje a idk proè, protože to necrashovalo pøedtím XDD
 			}
 			else
 			{
-				buffer = (T*)realloc(this->TCollection, CollectionSize);
-				buffer[CollectionSize - 1] = (*(T*)calloc(1, strSize));
+				buffer = (T*)realloc(this->TCollection, (CollectionSize + 1) * sizeof(char*));
+				if (buffer == nullptr)
+					throw std::exception("Exception thrown in List.h: buffer allocation failed!");
 
-				std::istringstream istream(strBuffer);
-				istream >> buffer[CollectionSize - 1];
+				buffer[CollectionSize - 1] = (T)_strdup(strBuffer);
 			}
 		}
 		else

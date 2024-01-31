@@ -242,3 +242,128 @@ char* DynamicStringLibrary::ReverseDynamicString(const char* str)
 
 	return res;
 }
+
+DynamicStringLibrary::DynamicStringLibrary(const char* entry)
+{
+	this->content = nullptr;
+	this->contentSize = 0;
+
+	size_t strSize = 0;
+	// len counter no condition necessary
+	for (size_t i = 0; entry[i] != '\0'; i++, strSize++) {}
+
+	this->content = (char*)calloc(strSize, 1);
+	if (this->content == nullptr)
+		throw std::exception("Exception thrown in DynamicStringLibrary.cpp: Failed to allocate property \"content\"");
+
+	for (size_t i = 0; i < strSize; i++)
+	{
+		this->content[i] = entry[i];
+
+		if (i == strSize - 1)
+		{
+			if (this->content[i] != '\0')
+			{
+				char* buffer = (char*)realloc(this->content, strSize + 1);
+				if (buffer == nullptr)
+				{
+					throw std::exception("Exception thrown in DynamicStringLibrary.cpp: Failed to allocate property \"content\"");
+				}
+
+				buffer[i + 1] = '\0';
+
+				this->content = buffer;
+				this->contentSize = 1; // Count the null terminator
+			}
+
+			this->contentSize += strSize; // add string size
+			return;
+		}
+	}
+}
+
+void DynamicStringLibrary::operator=(const char* entry)
+{
+	if (this->content != nullptr)
+		InnerFree(this->content);
+	this->content = const_cast<char*>(entry);
+}
+
+void DynamicStringLibrary::operator+=(const char* entry)
+{
+	size_t strSize = 0;
+
+	// len counter no condition necessary
+	for (size_t i = 0; entry[i] != '\0'; i++, strSize++) { }
+
+	if(this->contentSize == 0)
+	{
+		this->content = (char*)calloc(strSize, 1);
+		if (this->content == nullptr)
+			throw std::exception("Exception thrown in DynamicStringLibrary.cpp: Failed to allocate property \"content\"");
+
+		for (size_t i = 0; i < strSize; i++)
+		{
+			this->content[i] = entry[i];
+
+			if (i == strSize - 1)
+			{
+				if (this->content[i] != '\0')
+				{
+					char* buffer = (char*)realloc(this->content, strSize + 1);
+					if (buffer == nullptr)
+						throw std::exception("Exception thrown in DynamicStringLibrary.cpp: Failed to allocate property \"content\"");
+
+					buffer[i + 1] = '\0';
+
+					this->content = buffer;
+					this->contentSize = 1; // Count the null terminator
+				}
+
+				this->contentSize += strSize; // add string size
+				return;
+			}
+		}
+	}
+
+
+	char* buffer = (char*)realloc(this->content, (this->contentSize - 1) + strSize); // excluding null terminator from content (it is included in entry size)
+	if(buffer == nullptr)
+		throw std::exception("Exception thrown in DynamicStringLibrary.cpp: buffer allocation failed!");
+
+	for (size_t i = 0; i < strSize; i++)
+	{
+		// null terminator is located on buffer[size - 1] -> "abc" = 4 len > "abc"[3] = '\0'
+		buffer[(this->contentSize - 1) + i] = entry[i];
+
+		if (i == strSize - 1)
+		{
+			if (entry[i] != '\0')
+			{
+				this->content = (char*)realloc(buffer, this->contentSize + strSize);
+				if (this->content == nullptr)
+					throw std::exception("Exception thrown in DynamicStringLibrary.cpp: Failed to allocate property \"content\"");
+				else
+				{
+					this->content[contentSize + i] = '\0';
+					this->contentSize += 1;
+
+					return;
+				}
+			}
+		}
+	}
+}
+
+char* DynamicStringLibrary::operator*()
+{
+	if (this->content == nullptr)
+		return nullptr;
+	return this->content;
+}
+
+std::ostream& operator<<(std::ostream& os, const DynamicStringLibrary& _string)
+{
+	os << _string.content;
+	return os;
+}

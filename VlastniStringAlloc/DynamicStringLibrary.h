@@ -2,12 +2,16 @@
 
 #ifndef DYNAMICSTRING
 #include <malloc.h>
+#include <iostream>
 #endif
 
 class DynamicStringLibrary
 {
-public:
+private: // members
+    char* content;
+    size_t contentSize;
 
+public:
     /// <summary>
     /// Creates new Dynamic String
     /// </summary>
@@ -68,4 +72,36 @@ public:
     /// <param name="str">String to reverse</param>
     /// <returns>Dynamically created Memory pointer to reveresed string</returns>
     static char* ReverseDynamicString(const char* str);
+
+    DynamicStringLibrary(const char* entry);
+    //~DynamicStringLibrary() { free(this->content); }
+
+    size_t GetSize() { return this->contentSize; }
+
+    void operator=(const char* entry);
+    void operator+=(const char* entry);
+    template <class T>
+    bool operator==(T object);
+    template <class T>
+    bool operator !=(T object);
+    friend std::ostream& operator<<(std::ostream& os, const DynamicStringLibrary& _string);
+    char* operator*();
 };
+
+template<class T>
+inline bool DynamicStringLibrary::operator==(T object)
+{
+    if (!std::is_same<T, DynamicStringLibrary>::value)
+        return false;
+
+    return DynamicStringLibrary::CompareDynamicString(this->content, ((DynamicStringLibrary)object).content);
+}
+
+template<class T>
+inline bool DynamicStringLibrary::operator!=(T object)
+{
+    if (!std::is_same<T, DynamicStringLibrary>::value)
+        return false;
+    
+    return !DynamicStringLibrary::CompareDynamicString(this->content, ((DynamicStringLibrary)object).content);
+}
