@@ -10,3 +10,9 @@ void InnerFree(T* ptr)
 			ptr = nullptr;
 	}
 }
+
+template<typename T>
+T remove_const(const T* ptr)
+{
+	return *ptr;
+}
