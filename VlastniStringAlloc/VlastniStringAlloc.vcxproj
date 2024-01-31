@@ -133,6 +133,7 @@
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CustomMacros.h" />
     <ClInclude Include="DynamicStringLibrary.h" />
     <ClInclude Include="List.h" />
   </ItemGroup>

@@ -4,8 +4,6 @@
 #include <malloc.h>
 #endif
 
-#define InnerFree(ptr) { free(ptr); }
-
 class DynamicStringLibrary
 {
 public:

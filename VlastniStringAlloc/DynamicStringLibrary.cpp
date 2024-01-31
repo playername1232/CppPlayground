@@ -1,6 +1,7 @@
 #include "DynamicStringLibrary.h"
 #include <iostream>
 #include <cctype>
+#include "CustomMacros.h"
 
 /// <summary>
 /// Checks for buffer overflow, increases memory allocation if the overflow would occur

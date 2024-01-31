@@ -3,6 +3,8 @@
 #include <malloc.h>
 #include <iostream>
 #include <sstream>
+#include "CustomMacros.h"
+
 #endif // !LISTDEF
 
 template<typename T>
@@ -59,11 +61,8 @@ public:
 			oss << item;
 
 			std::string pom = oss.str();
-			char* strBuffer = const_cast<char*>(pom.c_str());
-			
-
-			// "error C2440: 'initializing': cannot convert from 'const _Elem *' to 'char *'"
-										   // When I tried to do it in one step oss.str().c_str() ... Bullshit :D
+			char* strBuffer = const_cast<char*>(pom.c_str()); // "error C2440: 'initializing': cannot convert from 'const _Elem *' to 'char *'"
+															  // When I tried to do it in one step oss.str().c_str() ... Bullshit :D
 
 			if (strBuffer == nullptr)
 				throw std::exception("List.h has thrown an exception: ostringstream returned nullptr on strBuffer!");
@@ -154,10 +153,34 @@ public:
 
 	void Clear()
 	{
-		free(this->TCollection);
+		InnerFree(this->TCollection);
 		
 		this->TCollection = nullptr;
 		this->CollectionSize = 0;
+	}
+
+	static void Move(List<T>& outList, T* arr, size_t len)
+	{
+		if (outList.TCollection != nullptr)
+			InnerFree(outList.TCollection);
+
+		for (size_t idx = 0; idx < len; idx++)
+			outList.Add(arr[idx]);
+
+		outList.CollectionSize = len;
+	}
+	
+	static void MoveAndFreePrevious(List<T>& outList, T*& arr, size_t len)
+	{
+		if (outList.TCollection != nullptr)
+			InnerFree(outList.TCollection);
+
+		for (size_t idx = 0; idx < len; idx++)
+			outList.Add(arr[idx]);
+
+		outList.CollectionSize = len;
+		InnerFree(arr);
+		arr = nullptr;
 	}
 
 	size_t GetCount()
