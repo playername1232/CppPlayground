@@ -2,9 +2,10 @@
 #ifndef LISTDEF
 #include <malloc.h>
 #include <iostream>
+#include <sstream>
 #endif // !LISTDEF
 
-template<class T>
+template<typename T>
 class List
 {
 private:
@@ -14,7 +15,7 @@ private:
 public:
 	List()
 	{
-		TCollection = (T*)calloc(0, sizeof(T));
+		TCollection = nullptr;
 		CollectionSize = 0;
 	}
 	
@@ -23,7 +24,10 @@ public:
 		if (CollectionSize != 0)
 			free(TCollection);
 
+		TCollection = (T*)calloc(arrSize, sizeof(T));
+
 		CollectionSize = arrSize;
+
 		for (int i = 0; i < CollectionSize; i++)
 		{
 			TCollection = tArray[i];
@@ -39,23 +43,85 @@ public:
 		T* buffer;
 		CollectionSize += 1;
 
-		size_t _sizePerElement = 0
+		size_t _sizePerElement = sizeof(T);
 
-		if (std::is_convertible_v<T, const char*>)
+		bool isString = false;
+
+		if (std::is_same<T, std::string>::value || std::is_same<T, char*>::value)
 		{
-
+			_sizePerElement = 1;
+			isString = true;
 		}
 
-		if (CollectionSize == 1)
-			buffer = (T*)calloc(1, sizeof(T));
+		if (isString)
+		{
+			std::ostringstream oss{};
+			oss << item;
+
+			std::string pom = oss.str();
+			char* strBuffer = const_cast<char*>(pom.c_str());
+			
+
+			// "error C2440: 'initializing': cannot convert from 'const _Elem *' to 'char *'"
+										   // When I tried to do it in one step oss.str().c_str() ... Bullshit :D
+
+			if (strBuffer == nullptr)
+				throw std::exception("List.h has thrown an exception: ostringstream returned nullptr on strBuffer!");
+
+
+			size_t strSize = strlen(strBuffer);
+
+			if (strBuffer[strSize - 1] != '\0')
+			{
+				try
+				{
+					char* pomStrBuffer = (char*)realloc(strBuffer, strSize + 1);
+					if (pomStrBuffer == nullptr)
+						throw std::exception("List.h has thrown an exception: failed to allocate strBuffer!");
+
+					strBuffer = pomStrBuffer;
+				}
+				catch (std::exception ex)
+				{
+					std::cout << "Exception: " << ex.what();
+				}
+				strBuffer[strSize] = '\0';
+			}
+
+			if (CollectionSize == 1)
+			{
+				if (this->TCollection != nullptr)
+					free(this->TCollection);
+
+				buffer = (T*)calloc(1, sizeof(char*));
+
+				buffer[CollectionSize - 1] = (*(T*)calloc(1, strSize));
+
+				std::istringstream istream(strBuffer);
+				istream >> buffer[CollectionSize - 1];
+			}
+			else
+			{
+				buffer = (T*)realloc(this->TCollection, CollectionSize);
+				buffer[CollectionSize - 1] = (*(T*)calloc(1, strSize));
+
+				std::istringstream istream(strBuffer);
+				istream >> buffer[CollectionSize - 1];
+			}
+		}
 		else
-			buffer = (T*)realloc(TCollection, CollectionSize * _sizePerElement);
-		
+		{
+			if (CollectionSize == 1)
+				buffer = (T*)calloc(1, sizeof(T));
+			else
+				buffer = (T*)realloc(TCollection, CollectionSize * _sizePerElement);
 
-		if (buffer == nullptr)
-			throw std::exception("List.h has thrown an exception: failed to allocate buffer!");
 
-		buffer[CollectionSize - 1] = item;
+			if (buffer == nullptr)
+				throw std::exception("List.h has thrown an exception: failed to allocate buffer!");
+
+			buffer[CollectionSize - 1] = item;
+		}
 
 		this->TCollection = buffer;
 	}
@@ -66,6 +132,8 @@ public:
 		{
 			if (this->TCollection[i] == item)
 			{
+				size_t _sizePerElement = sizeof(T);
+
 				T* buffer = (T*)realloc(TCollection, CollectionSize * _sizePerElement);
 				if (buffer == nullptr)
 					throw std::exception("List.h has thrown an exception: failed to allocate buffer!");
@@ -82,6 +150,14 @@ public:
 				return;
 			}
 		}
+	}
+
+	void Clear()
+	{
+		free(this->TCollection);
+		
+		this->TCollection = nullptr;
+		this->CollectionSize = 0;
 	}
 
 	size_t GetCount()

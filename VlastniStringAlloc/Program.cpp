@@ -35,10 +35,11 @@ void TestDynamicStringAllocation()
 
 int main()
 {
-    List<int> xd;
+    List<string> xd;
 
-    xd.Add(10);
-    xd.Add(35);
+    xd.Add("ahoj");
+    xd.Add("cau");
+    xd.Add("jak je");
 
     for (int i = 0; i < xd.GetCount(); i++)
     {
