@@ -11,8 +11,28 @@ void InnerFree(T* ptr)
 	}
 }
 
+/// <summary>
+/// Converts const to variables
+/// </summary>
+/// <typeparam name="T">Data type</typeparam>
+/// <param name="ptr">Const entry</param>
+/// <returns>Returns value of constant as variable</returns>
 template<typename T>
-T remove_const(const T* ptr)
+auto remove_constant(const T* ptr)
 {
+	if (std::is_same<T, char*>::value ||
+		std::is_same<T, std::string>::value)
+	{
+		char* res = _strdup(ptr);
+	
+		return res;
+	}
+	if (std::is_same<T, DynamicStringLibrary>::value)
+	{
+		char* res = ((DynamicStringLibrary)ptr).GetContent();
+
+		return res;
+	}
+
 	return *ptr;
 }

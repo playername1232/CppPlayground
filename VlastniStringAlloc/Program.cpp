@@ -62,6 +62,7 @@ void TestDynamicStringAllocation3()
 int main()
 {
     TestDynamicStringAllocation3();
+
     return -1;
 
     List<string> xd;
