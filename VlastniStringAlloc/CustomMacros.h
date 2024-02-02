@@ -29,7 +29,7 @@ auto remove_constant(const T* ptr)
 	}
 	if (std::is_same<T, DynamicStringLibrary>::value)
 	{
-		char* res = ((DynamicStringLibrary)ptr).GetContent();
+		DynamicStringLibrary res = ((DynamicStringLibrary*)ptr)->GetContent();
 
 		return res;
 	}
