@@ -57,7 +57,7 @@ public:
 
 		if (isString)
 		{
-			std::ostringstream oss{};
+			std::ostringstream oss {};
 			oss << item;
 
 			std::string pom = oss.str();
@@ -78,12 +78,13 @@ public:
 						throw std::exception("List.h has thrown an exception: failed to allocate strBuffer!");
 
 					strBuffer = pomStrBuffer;
+					strBuffer[strSize] = '\0';
+					strSize += 1;
 				}
 				catch (std::exception ex)
 				{
-					std::cout << "Exception: " << ex.what();
+					std::cout << "CallStack Message: " << ex.what();
 				}
-				strBuffer[strSize] = '\0';
 			}
 
 			if (CollectionSize == 1)
@@ -92,16 +93,28 @@ public:
 					free(this->TCollection);
 
 				buffer = (T*)calloc(1, sizeof(char*));
+				if(buffer == nullptr)
+					throw std::exception("Exception thrown in List.h: buffer allocation failed!");
 
-				buffer[CollectionSize - 1] = (T)_strdup(strBuffer); // Tady to crashuje a idk proè, protože to necrashovalo pøedtím XDD
+				char* pomStr = (char*)calloc(strSize, 1);
+
+				for (size_t idx = 0; idx < strSize; idx++)
+					pomStr[idx] = strBuffer[idx];
+
+				buffer[CollectionSize - 1] = _strdup(pomStr); // Tuto crashuje
 			}
 			else
 			{
-				buffer = (T*)realloc(this->TCollection, (CollectionSize + 1) * sizeof(char*));
+				buffer = (T*)realloc(this->TCollection, (CollectionSize + 1) * sizeof(T*));
 				if (buffer == nullptr)
 					throw std::exception("Exception thrown in List.h: buffer allocation failed!");
 
-				buffer[CollectionSize - 1] = (T)_strdup(strBuffer);
+				char* pomStr = (char*)calloc(strSize, 1);
+
+				for (size_t idx = 0; idx < strSize; idx++)
+					pomStr[idx] = strBuffer[idx];
+
+				buffer[CollectionSize - 1] = (T)pomStr; // Tuto crashuje
 			}
 		}
 		else

@@ -61,13 +61,15 @@ void TestDynamicStringAllocation3()
 
 int main()
 {
-    TestDynamicStringAllocation3();
+    //TestDynamicStringAllocation3();
 
-    return -1;
+    cout << "Begin...";
 
     List<string> xd;
 
     xd.Add("ahoj");
+    cout << "xd[0] = " << xd[0] << endl;
+    xd.Remove("ahoj");
     xd.Add("cau");
     xd.Add("jak je");
 
