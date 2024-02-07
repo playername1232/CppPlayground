@@ -1,11 +1,13 @@
 #pragma once
-#ifndef LISTDEF
+#ifndef MALLOCDEF
 #include <malloc.h>
+#include "CustomMacros.h"
+#endif // !LISTDEF
+
+#ifndef STREAMDEF
 #include <iostream>
 #include <sstream>
-#include "CustomMacros.h"
-
-#endif // !LISTDEF
+#endif
 
 template<typename T>
 class List
@@ -48,14 +50,20 @@ public:
 		size_t _sizePerElement = sizeof(T);
 
 		bool isString = false;
+		int  isCharArr = false;
 
-		if (std::is_same<T, std::string>::value || std::is_same<T, char*>::value)
+		if (std::is_same<T, std::string>::value)
 		{
 			_sizePerElement = 1;
 			isString = true;
 		}
+		if (std::is_same<T, char*>::value)
+		{
+			_sizePerElement = 1;
+			isCharArr = true;
+		}
 
-		if (isString)
+		if (isString || isCharArr)
 		{
 			std::ostringstream oss {};
 			oss << item;

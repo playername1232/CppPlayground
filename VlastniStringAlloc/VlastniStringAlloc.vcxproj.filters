@@ -19,12 +19,18 @@
     <Filter Include="Source Files\DynamicArray">
       <UniqueIdentifier>{16ecb7f3-d402-472e-93c7-3143a0e5ef07}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\IOWriteNRead">
+      <UniqueIdentifier>{42237467-948d-4c54-90cf-37ab6ba3fdd7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DynamicStringLibrary.cpp">
       <Filter>Source Files\DynamicStringAllocation</Filter>
     </ClCompile>
     <ClCompile Include="Program.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FileStream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -37,6 +43,9 @@
     </ClInclude>
     <ClInclude Include="CustomMacros.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FileStream.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

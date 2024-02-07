@@ -1,7 +1,16 @@
+// TODO: Check for multiple declaration of allocate_heap, allocate_heap_clean and reallocate_heap_block
+
+//1 > Program.obj : error LNK2005 : "void * __cdecl allocate_heap(unsigned __int64,unsigned __int64)" (? allocate_heap@@YAPEAX_K0@Z) already defined in DynamicStringLibrary.obj
+//1 > Program.obj : error LNK2005 : "void * __cdecl allocate_heap_clean(unsigned __int64,unsigned __int64)" (? allocate_heap_clean@@YAPEAX_K0@Z) already defined in DynamicStringLibrary.obj
+//1 > Program.obj : error LNK2005 : "void * __cdecl reallocate_heap_block(void *,unsigned __int64,unsigned __int64)" (? reallocate_heap_block@@YAPEAXPEAX_K1@Z) already defined in DynamicStringLibrary.obj
+
+
+#ifndef DYNAMICLIBINCLUDED
 #include "DynamicStringLibrary.h"
 #include <iostream>
 #include <cctype>
 #include "CustomMacros.h"
+#endif // !DYNAMICLIBINCLUDED
 
 /// <summary>
 /// Checks for buffer overflow, increases memory allocation if the overflow would occur
@@ -18,10 +27,7 @@ static bool CheckForBufferOverflow(char*& arr, size_t index, int& bufferAllocSiz
 	if (index > (bufferAllocSize - 1)) // Index 9 = length 10 therefore max allocated size is 10
 	{
 		bufferAllocSize += 1;
-		char* buffer = (char*)realloc(arr, bufferAllocSize); // + 1 to add another character space
-
-		if (buffer == nullptr)
-			return false;
+		char* buffer = (char*)reallocate_heap_block(arr, bufferAllocSize, 1);
 
 		arr = buffer;
 	}
@@ -34,8 +40,8 @@ char* DynamicStringLibrary::CreateDynamicString(const char* str, size_t len)
 		return nullptr;
 
 	char* buffer = str[len - 1] == '\0' ?
-		(char*)calloc(len, 1) :
-		(char*)calloc(len + 1, 1); // +1 for null terminator
+		(char*)allocate_heap_clean(len, 1) :
+		(char*)allocate_heap_clean(len + 1, 1);  // +1 for null terminator
 
 
 	if (buffer != nullptr)
@@ -46,10 +52,7 @@ char* DynamicStringLibrary::CreateDynamicString(const char* str, size_t len)
 
 		if (buffer[len - 1] != '\0')
 		{
-			buffer = (char*)realloc(buffer, len + 1);
-
-			if (buffer == nullptr)
-				return nullptr;
+			buffer = (char*)reallocate_heap_block(buffer, len + 1, len);
 
 			buffer[len] = '\0';
 		}
@@ -66,11 +69,7 @@ char* DynamicStringLibrary::ConcatenateDynamicString(const char* str, const char
 	size_t currentIndex = 0,
 		   lastIndexOfStr = 0;
 
-	char* buffer = (char*)calloc(_currentBufferAlloc, 1);
-	
-	if (buffer == nullptr)
-		throw std::exception("Failed to initialize buffer!");
-
+	char* buffer = (char*)allocate_heap_clean(_currentBufferAlloc, 1);
 
 	for (int i = 0; str[i] != '\0'; i++, currentIndex += 1)
 	{
@@ -159,11 +158,8 @@ void DynamicStringLibrary::ExtractFirstDynamicString(char*& str, const char* ext
 		return;
 
 	size_t buffSize = strSize - (endIndex - startIndex + 1);
-	// Add additional for null terminator
-	char* buffer = (char*)calloc(buffSize + 1, 1);
 
-	if (buffer == nullptr)
-		throw std::exception("str reallocation has failed!");
+	char* buffer = (char*)allocate_heap_clean(buffSize + 1, 1); // +1 for the null terminator
 
 	int bufferIndex = 0;
 	for (int i = 0; i < strSize; i++)
@@ -185,10 +181,7 @@ char* DynamicStringLibrary::CopyDynamicString(const char* str)
 	while (str[strLength] != '\0')
 		++strLength;
 
-	char* buffer = (char*)calloc(strLength + 1, 1);  // +1 for the null terminator
-
-	if (buffer == nullptr)
-		throw std::exception("buffer allocation failed!");
+	char* buffer = (char*)allocate_heap_clean(strLength + 1, 1); // +1 for the null terminator
 
 	for (size_t i = 0; i < strLength; ++i) {
 		buffer[i] = str[i];
@@ -230,10 +223,7 @@ char* DynamicStringLibrary::ReverseDynamicString(const char* str)
 	for (int i = 0; str[i] != '\0'; i++)
 		strSize++;
 
-	char* res = (char*)calloc(strSize + 1, 1);
-
-	if (res == nullptr)
-		return nullptr;
+	char* res = (char*)allocate_heap_clean(strSize + 1, 1);
 
 	for (int i = 0; i < strSize; i++)
 	{
@@ -252,9 +242,7 @@ DynamicStringLibrary::DynamicStringLibrary(const char* entry)
 	// len counter no condition necessary
 	for (size_t i = 0; entry[i] != '\0'; i++, strSize++) {}
 
-	this->content = (char*)calloc(strSize, 1);
-	if (this->content == nullptr)
-		throw std::exception("Exception thrown in DynamicStringLibrary.cpp: Failed to allocate property \"content\"");
+	this->content = (char*)allocate_heap_clean(strSize, 1);
 
 	for (size_t i = 0; i < strSize; i++)
 	{
@@ -263,12 +251,8 @@ DynamicStringLibrary::DynamicStringLibrary(const char* entry)
 		if (i == strSize - 1)
 		{
 			if (this->content[i] != '\0')
-			{
-				char* buffer = (char*)realloc(this->content, strSize + 1);
-				if (buffer == nullptr)
-				{
-					throw std::exception("Exception thrown in DynamicStringLibrary.cpp: Failed to allocate property \"content\"");
-				}
+			{				
+				char* buffer = (char*)reallocate_heap_block(this->content, strSize + 1, 1);
 
 				buffer[i + 1] = '\0';
 
@@ -298,9 +282,7 @@ void DynamicStringLibrary::operator+=(const char* entry)
 
 	if(this->contentSize == 0)
 	{
-		this->content = (char*)calloc(strSize, 1);
-		if (this->content == nullptr)
-			throw std::exception("Exception thrown in DynamicStringLibrary.cpp: Failed to allocate property \"content\"");
+		this->content = (char*)allocate_heap_clean(strSize, 1);
 
 		for (size_t i = 0; i < strSize; i++)
 		{
@@ -310,10 +292,7 @@ void DynamicStringLibrary::operator+=(const char* entry)
 			{
 				if (this->content[i] != '\0')
 				{
-					char* buffer = (char*)realloc(this->content, strSize + 1);
-					if (buffer == nullptr)
-						throw std::exception("Exception thrown in DynamicStringLibrary.cpp: Failed to allocate property \"content\"");
-
+					char* buffer = (char*)allocate_heap_clean(strSize, 1 + 1);
 					buffer[i + 1] = '\0';
 
 					this->content = buffer;
@@ -326,10 +305,7 @@ void DynamicStringLibrary::operator+=(const char* entry)
 		}
 	}
 
-
-	char* buffer = (char*)realloc(this->content, (this->contentSize - 1) + strSize); // excluding null terminator from content (it is included in entry size)
-	if(buffer == nullptr)
-		throw std::exception("Exception thrown in DynamicStringLibrary.cpp: buffer allocation failed!");
+	char* buffer = (char*)reallocate_heap_block(this->content, (this->contentSize - 1) + strSize, 1); // excluding null terminator from content (it is included in entry size)
 
 	for (size_t i = 0; i < strSize; i++)
 	{
@@ -340,16 +316,12 @@ void DynamicStringLibrary::operator+=(const char* entry)
 		{
 			if (entry[i] != '\0')
 			{
-				this->content = (char*)realloc(buffer, this->contentSize + strSize);
-				if (this->content == nullptr)
-					throw std::exception("Exception thrown in DynamicStringLibrary.cpp: Failed to allocate property \"content\"");
-				else
-				{
-					this->content[contentSize + i] = '\0';
-					this->contentSize += 1;
+				this->content = (char*)reallocate_heap_block(buffer, this->contentSize + strSize, 1);
+				
+				this->content[contentSize + i] = '\0';
+				this->contentSize += 1;
 
-					return;
-				}
+				return;
 			}
 		}
 	}

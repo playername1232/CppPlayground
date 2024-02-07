@@ -1,4 +1,19 @@
+// TODO: Check for multiple declaration of allocate_heap, allocate_heap_clean and reallocate_heap_block
+
+//1 > Program.obj : error LNK2005 : "void * __cdecl allocate_heap(unsigned __int64,unsigned __int64)" (? allocate_heap@@YAPEAX_K0@Z) already defined in DynamicStringLibrary.obj
+//1 > Program.obj : error LNK2005 : "void * __cdecl allocate_heap_clean(unsigned __int64,unsigned __int64)" (? allocate_heap_clean@@YAPEAX_K0@Z) already defined in DynamicStringLibrary.obj
+//1 > Program.obj : error LNK2005 : "void * __cdecl reallocate_heap_block(void *,unsigned __int64,unsigned __int64)" (? reallocate_heap_block@@YAPEAXPEAX_K1@Z) already defined in DynamicStringLibrary.obj
+
 #pragma once
+#ifndef CUSTOMMACRO
+#define CUSTOMMACRO
+
+#include <malloc.h>
+#include <iostream>
+
+#endif // CUSTOMMACRO
+
+
 
 template <typename T>
 void InnerFree(T* ptr)
@@ -35,4 +50,44 @@ auto remove_constant(const T* ptr)
 	}
 
 	return *ptr;
+}
+
+void* allocate_heap(size_t _count, size_t _size)
+{
+	if (_count == 0 || _size == 0)
+		return nullptr;
+
+	void* _newBlock = malloc(_count * _size);
+
+	if (_newBlock == nullptr)
+		throw std::exception("An excption occured in CustomMacros::allocate_memory_clean(size_t, size_t): Unable to allocate new block on heap");
+
+	return _newBlock;
+}
+
+void* allocate_heap_clean(size_t _count, size_t _size)
+{
+	if (_count == 0 || _size == 0)
+		return nullptr;
+
+	void* _newBlock = calloc(_count, _size);
+	if (_newBlock == nullptr)
+		throw std::exception("An excption occured in CustomMacros::allocate_memory_clean(size_t, size_t): Unable to allocate new block on heap");
+
+	return _newBlock;
+}
+
+void* reallocate_heap_block(void* _block, size_t _newCount, size_t _newSize)
+{
+	if (_newCount == 0 || _newSize == 0)
+	{
+		if (_block == nullptr)
+			throw std::exception("An excption occured in CustomMacros::reallocate_heap_block(void*, size_t, size_t): Invalid count or size of new block!");
+	}
+
+	void* _newBlock = realloc(_block, _newCount * _newSize);
+	if (_newBlock == nullptr)
+		throw std::exception("An excption occured in CustomMacros::allocate_memory_clean(size_t, size_t): Unable to allocate new block on heap");
+
+	return _newBlock;
 }

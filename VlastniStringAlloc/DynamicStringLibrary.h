@@ -1,9 +1,6 @@
 #pragma once
-
-#ifndef DYNAMICSTRING
-#include <malloc.h>
 #include <iostream>
-#endif
+
 
 class DynamicStringLibrary
 {
