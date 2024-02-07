@@ -1,16 +1,7 @@
-// TODO: Check for multiple declaration of allocate_heap, allocate_heap_clean and reallocate_heap_block
-
-//1 > Program.obj : error LNK2005 : "void * __cdecl allocate_heap(unsigned __int64,unsigned __int64)" (? allocate_heap@@YAPEAX_K0@Z) already defined in DynamicStringLibrary.obj
-//1 > Program.obj : error LNK2005 : "void * __cdecl allocate_heap_clean(unsigned __int64,unsigned __int64)" (? allocate_heap_clean@@YAPEAX_K0@Z) already defined in DynamicStringLibrary.obj
-//1 > Program.obj : error LNK2005 : "void * __cdecl reallocate_heap_block(void *,unsigned __int64,unsigned __int64)" (? reallocate_heap_block@@YAPEAXPEAX_K1@Z) already defined in DynamicStringLibrary.obj
-
-
-#ifndef DYNAMICLIBINCLUDED
 #include "DynamicStringLibrary.h"
 #include <iostream>
 #include <cctype>
 #include "CustomMacros.h"
-#endif // !DYNAMICLIBINCLUDED
 
 /// <summary>
 /// Checks for buffer overflow, increases memory allocation if the overflow would occur
@@ -112,7 +103,7 @@ char* DynamicStringLibrary::ConcatenateDynamicString(const char* str, const char
 void DynamicStringLibrary::DeleteDynamicString(const char** arrToFree, size_t numOfElements)
 {
 	for (size_t idx = 0; idx < numOfElements; idx++)
-		InnerFree(const_cast<char*>(arrToFree[idx]));
+		free_heap(const_cast<char*>(arrToFree[idx]));
 }
 
 void DynamicStringLibrary::ExtractFirstDynamicString(char*& str, const char* extractStr, size_t sizeExtract)
@@ -269,7 +260,7 @@ DynamicStringLibrary::DynamicStringLibrary(const char* entry)
 void DynamicStringLibrary::operator=(const char* entry)
 {
 	if (this->content != nullptr)
-		InnerFree(this->content);
+		free_heap(this->content);
 	this->content = const_cast<char*>(entry);
 }
 

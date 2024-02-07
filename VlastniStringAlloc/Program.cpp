@@ -1,11 +1,4 @@
-﻿// TODO: Check for multiple declaration of allocate_heap, allocate_heap_clean and reallocate_heap_block
-
-//1 > Program.obj : error LNK2005 : "void * __cdecl allocate_heap(unsigned __int64,unsigned __int64)" (? allocate_heap@@YAPEAX_K0@Z) already defined in DynamicStringLibrary.obj
-//1 > Program.obj : error LNK2005 : "void * __cdecl allocate_heap_clean(unsigned __int64,unsigned __int64)" (? allocate_heap_clean@@YAPEAX_K0@Z) already defined in DynamicStringLibrary.obj
-//1 > Program.obj : error LNK2005 : "void * __cdecl reallocate_heap_block(void *,unsigned __int64,unsigned __int64)" (? reallocate_heap_block@@YAPEAXPEAX_K1@Z) already defined in DynamicStringLibrary.obj
-
-
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 #include "DynamicStringLibrary.h"
 #include "List.h"
@@ -68,22 +61,5 @@ void TestDynamicStringAllocation3()
 
 int main()
 {
-    TestDynamicStringAllocation3();
-
     return 0;
-
-    cout << "Begin...";
-
-    List<string> xd;
-
-    xd.Add("ahoj");
-    cout << "xd[0] = " << xd[0] << endl;
-    //xd.Remove("ahoj");
-    xd.Add("cau");
-    xd.Add("jak je");
-
-    for (int i = 0; i < xd.GetCount(); i++)
-    {
-        cout << "xd[" << i << "] = " << xd[i] << endl;
-    }
 }

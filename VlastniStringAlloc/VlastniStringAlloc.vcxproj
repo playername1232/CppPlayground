@@ -128,6 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CustomMacros.cpp" />
     <ClCompile Include="DynamicStringLibrary.cpp" />
     <ClCompile Include="FileStream.cpp" />
     <ClCompile Include="Program.cpp" />

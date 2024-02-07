@@ -170,7 +170,7 @@ public:
 
 	void Clear()
 	{
-		InnerFree(this->TCollection);
+		free_heap(this->TCollection);
 		
 		this->TCollection = nullptr;
 		this->CollectionSize = 0;
@@ -179,7 +179,7 @@ public:
 	static void Move(List<T>& outList, T* arr, size_t len)
 	{
 		if (outList.TCollection != nullptr)
-			InnerFree(outList.TCollection);
+			free_heap(outList.TCollection);
 
 		for (size_t idx = 0; idx < len; idx++)
 			outList.Add(arr[idx]);
@@ -190,13 +190,13 @@ public:
 	static void MoveAndFreePrevious(List<T>& outList, T*& arr, size_t len)
 	{
 		if (outList.TCollection != nullptr)
-			InnerFree(outList.TCollection);
+			free_heap(outList.TCollection);
 
 		for (size_t idx = 0; idx < len; idx++)
 			outList.Add(arr[idx]);
 
 		outList.CollectionSize = len;
-		InnerFree(arr);
+		free_heap(arr);
 		arr = nullptr;
 	}
 

@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 
+#define DYNAMICSTRING
+
 class DynamicStringLibrary
 {
 private: // members
