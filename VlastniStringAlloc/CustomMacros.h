@@ -58,9 +58,10 @@ auto remove_constant(const T* ptr)
 	return *ptr;
 }
 
-void TestingAllocFunction()
+void TestingAllocFunction(void* block)
 {
-	//VirtualFree()
+	// https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc
+	void* xd = VirtualAlloc(block, 10, MEM_COMMIT, 20); // Example
 	//VirtualAlloc()
 }
 
