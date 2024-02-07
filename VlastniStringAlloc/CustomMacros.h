@@ -10,10 +10,16 @@
 
 #include <malloc.h>
 #include <iostream>
+#include <Windows.h>
 
 #endif // CUSTOMMACRO
 
-
+class MemoryHeader
+{
+private:
+	size_t byteSize;
+	void* heapBlockHead;
+};
 
 template <typename T>
 void InnerFree(T* ptr)
@@ -50,6 +56,12 @@ auto remove_constant(const T* ptr)
 	}
 
 	return *ptr;
+}
+
+void TestingAllocFunction()
+{
+	//VirtualFree()
+	//VirtualAlloc()
 }
 
 void* allocate_heap(size_t _count, size_t _size)
