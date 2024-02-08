@@ -61,5 +61,9 @@ void TestDynamicStringAllocation3()
 
 int main()
 {
+    AsyncTest xd;
+
+    xd.GeneralTest();
+
     return 0;
 }
