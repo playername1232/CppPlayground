@@ -2,6 +2,7 @@
 #include <string>
 #include "DynamicStringLibrary.h"
 #include "List.h"
+#include "AsyncTest.h"
 
 using namespace std;
 
@@ -59,11 +60,14 @@ void TestDynamicStringAllocation3()
     cout << "are strings \"" << str3 << "\" and \"" << str4 << "\" not equal? : " << res2;
 }
 
-int main()
+void SimpleAsynchronousTest()
 {
     AsyncTest xd;
 
     xd.GeneralTest();
+}
 
+int main()
+{
     return 0;
 }
