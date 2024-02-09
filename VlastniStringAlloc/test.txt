@@ -1,0 +1,14 @@
+Fatal error: [File:D:\Projects\FTW-Stable\Engine\Source\Runtime\D3D12RHI\Private\D3D12Adapter.cpp] [Line: 418] The debug interface requires the D3D12 SDK Layers. Please install the Graphics Tools for Windows. See: https://docs.microsoft.com/en-us/windows/uwp/gaming/use-the-directx-runtime-and-visual-studio-graphics-diagnostic-features
+
+FTWClient_Win64_Test!FD3D12Adapter::CreateRootDevice() [D:\Projects\FTW-Stable\Engine\Source\Runtime\D3D12RHI\Private\D3D12Adapter.cpp:420]
+FTWClient_Win64_Test!FD3D12Adapter::InitializeDevices() [D:\Projects\FTW-Stable\Engine\Source\Runtime\D3D12RHI\Private\D3D12Adapter.cpp:895]
+FTWClient_Win64_Test!FD3D12DynamicRHI::Init() [D:\Projects\FTW-Stable\Engine\Source\Runtime\D3D12RHI\Private\Windows\WindowsD3D12Device.cpp:1384]
+FTWClient_Win64_Test!RHIInit() [D:\Projects\FTW-Stable\Engine\Source\Runtime\RHI\Private\DynamicRHI.cpp:355]
+FTWClient_Win64_Test!FEngineLoop::PreInitPreStartupScreen() [D:\Projects\FTW-Stable\Engine\Source\Runtime\Launch\Private\LaunchEngineLoop.cpp:3199]
+FTWClient_Win64_Test!GuardedMain() [D:\Projects\FTW-Stable\Engine\Source\Runtime\Launch\Private\Launch.cpp:140]
+FTWClient_Win64_Test!GuardedMainWrapper() [D:\Projects\FTW-Stable\Engine\Source\Runtime\Launch\Private\Windows\LaunchWindows.cpp:118]
+FTWClient_Win64_Test!LaunchWindowsStartup() [D:\Projects\FTW-Stable\Engine\Source\Runtime\Launch\Private\Windows\LaunchWindows.cpp:258]
+FTWClient_Win64_Test!WinMain() [D:\Projects\FTW-Stable\Engine\Source\Runtime\Launch\Private\Windows\LaunchWindows.cpp:299]
+FTWClient_Win64_Test!__scrt_common_main_seh() [D:\a_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288]
+kernel32
+ntdll

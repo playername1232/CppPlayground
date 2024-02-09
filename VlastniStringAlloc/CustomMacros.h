@@ -41,7 +41,7 @@ auto remove_constant(const T* ptr)
 		return res;
 	}
 
-	return *ptr;
+	T* value = &*ptr;
 }
 
 void TestingAllocFunction(void* block);

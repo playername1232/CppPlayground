@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <string>
 #include "DynamicStringLibrary.h"
+#include "FileStream.h"
 #include "List.h"
 #include "AsyncTest.h"
 
@@ -69,5 +70,10 @@ void SimpleAsynchronousTest()
 
 int main()
 {
+    char* text = FileStream::ReadAllText("D:\\Programy\\CppPlayground\\VlastniStringAlloc\\text.txt");
+
+    if (text == nullptr)
+        cout << "text is nullptr" << endl;
+
     return 0;
 }
