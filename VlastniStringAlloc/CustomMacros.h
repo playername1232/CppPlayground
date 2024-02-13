@@ -30,8 +30,8 @@ auto remove_constant(const T* ptr)
 	if (std::is_same<T, char*>::value ||
 		std::is_same<T, std::string>::value)
 	{
-		char* res = _strdup(ptr);
-	
+		char* res = _strdup(static_cast<char*>(ptr));
+
 		return res;
 	}
 	if (std::is_same<T, DynamicStringLibrary>::value)

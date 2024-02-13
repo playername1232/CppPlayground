@@ -70,10 +70,23 @@ void SimpleAsynchronousTest()
 
 int main()
 {
-    char* text = FileStream::ReadAllText("D:\\Programy\\CppPlayground\\VlastniStringAlloc\\text.txt");
+    char* text = FileStream::ReadAllText("D:\\Programy\\CppPlayground\\VlastniStringAlloc\\test.txt");
 
     if (text == nullptr)
         cout << "text is nullptr" << endl;
+
+    char* content = FileStream::ReadAllText("test.txt");
+
+    cout << strlen(content);
+
+    const char* myArr[] =
+    {
+        "Tohle je prvni Radek",
+        "Tohle je druhy radek",
+        "Tohle je treti radek"
+    };
+
+    FileStream::WriteAllLines("testCopy.txt", myArr, 3);
 
     return 0;
 }

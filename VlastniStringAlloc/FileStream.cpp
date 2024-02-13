@@ -28,8 +28,14 @@ char* FileStream::ReadAllText(const char* filePath)
             buffer = (char*)reallocate_heap_block(buffer, allocSize, 1);
         }
 
-        fread(buffer, 1, 1, file);
+        char* pomBuffer = (char*)allocate_heap_clean(1, 1);
+        fread(pomBuffer, 1, 1, file);
+
+        buffer[buffIdx] = pomBuffer[0];
+
         buffIdx += 1;
+
+        free(pomBuffer);
     }
 
     if (buffer[buffIdx] != '\0') // If last character read from file isn't null terminator
@@ -44,33 +50,9 @@ char* FileStream::ReadAllText(const char* filePath)
     buffer = (char*)reallocate_heap_block(buffer, buffIdx + 1, 1);
 
     return buffer;
-    
-
-    /*FILE* file;
-    fopen_s(&file, filePath, "wr+");
-
-    if (file == nullptr)
-        return nullptr;
-
-    int allocSize = fgetc(file);
-
-    char* buffer = (char*)allocate_heap_clean(allocSize, 1);
-
-    fread(buffer, 1, allocSize, file);
-
-    fclose(file);
-
-    if (buffer[allocSize - 1] != '\0')
-    {
-        buffer = (char*)reallocate_heap_block(buffer, allocSize + 1, 1);
-
-        buffer[allocSize] = '\0';
-    }
-
-    return buffer;*/
 }
 
-char** FileStream::ReadAllLines(char* filePath)
+char** FileStream::ReadAllLines(const char* filePath)
 {
     // Alocate per 500 bytes for each line. 
     // With each 501th character allocate another 500 to the line.
@@ -80,12 +62,80 @@ char** FileStream::ReadAllLines(char* filePath)
     return nullptr;
 }
 
-void FileStream::WriteAllText(char* filePath, char* text)
+
+void FileStream::WriteAllText(const char* filePath, const char* text)
 {
 
 }
 
-void FileStream::WriteAllLines(char* filePath, char** content)
+/// <summary>
+/// Finds character in string
+/// </summary>
+/// <param name="content">String entry</param>
+/// <param name="_char">Character to find</param>
+/// <returns>Index of first character occurence OR -1 if character doesn't exist in given string</returns>
+int GetIndexOf(char* content, char _c)
 {
+    for (int i = 0; content[i] != '\0'; i++)
+    {
+        if (content[i] == _c)
+            return i;
+    }
+    return -1;
+}
 
+/// <summary>
+/// Replaces character in 
+/// </summary>
+/// <param name="content">String Entry</param>
+/// <param name="_c">Original character</param>
+/// <param name="_r">Replacement character</param>
+/// <returns></returns>
+int CharReplace(char* content, char _c, char _r)
+{
+    int ret = -1;
+    for (int i = 0; content[i] != '\0'; i++)
+    {
+        if (content[i] == _c)
+        {
+            ret = 0;
+            content[i] = _r;
+        }
+    }
+    return ret;
+}
+
+void FileStream::WriteAllLines(const char* filePath, const char** content, size_t n_lines)
+{
+    size_t buffIdx = 0;
+
+    FILE* file;
+    fopen_s(&file, filePath, "w");
+
+    if (file == nullptr)
+        return;
+
+    size_t allocSize    = 500;
+    size_t currentIndex = 0;
+
+    char* stringBuilder = (char*)allocate_heap_clean(allocSize, 1);
+
+    for (int line = 0; line < n_lines; line++)
+    {
+        for (int idx = 0; content[line][idx] != '\0'; idx++, currentIndex++)
+        {
+            if (currentIndex == allocSize)
+                stringBuilder = (char*)reallocate_heap_block(stringBuilder, allocSize += 500, 1);
+
+            // Not printing new line
+            if (content[line][idx] == '\0' && line != (n_lines - 1))
+                stringBuilder[currentIndex] = '\n';
+            else
+                stringBuilder[currentIndex] = content[line][idx];
+        }
+    }
+
+    fwrite(stringBuilder, 1, currentIndex + 1, file);
+
+    free(stringBuilder);
 }
