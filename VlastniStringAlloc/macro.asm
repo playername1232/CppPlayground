@@ -1,16 +1,24 @@
-section .data
-
 section .text
-    global remove_constant
+    global count_char
 
-remove_constant:
-    push ebp
-    mov epb, esp
+count_char:
+    mov ebx, edi ; String address (entry)
+    movzx ecx, byte [esi] ; Character to search for (_c)
+    xor edx, edx ; Counter (initialize to 0)
+    xor r8d, r8d ; Index (initialize to 0)
 
-    mov ebx, 0 ; counter
-    moc ecx, len ; length
-    mov edx, elemSize ; Element size
+.loopBody:
+    cmp byte [ebx + r8d], 0 ; Check if we've reached the end of the string
+    je .retVal
 
-copy_loop:
-    mov d1 [eax + ecx]
-    
+    cmp byte [ebx + r8d], cl ; Compare the byte at ebx + r8d with the character in cl
+    jne .notFound
+
+    inc edx ; Increment the counter
+.notFound:
+    inc r8d ; Increment the index
+    jmp .loopBody
+
+.retVal:
+    mov eax, edx ; Move the counter value into eax (return value)
+    ret ; Return

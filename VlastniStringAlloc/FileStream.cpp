@@ -59,7 +59,54 @@ char** FileStream::ReadAllLines(const char* filePath)
     // After reading is done, resize the pointer to file line according to string's length
     // Always allocate one line by one. Next line = alloc += 1;
 
-    return nullptr;
+    // Declaration
+    char** buffer = nullptr;
+
+    FILE* file;
+    fopen_s(&file, filePath, "r");
+
+    if (file == nullptr)
+        throw std::exception("");
+
+    int fileIdx   = 0;
+    int fileLine  = 0;
+    int lineAlloc = 500;
+
+    buffer = (char**)allocate_heap_clean(1, sizeof(char*));
+    buffer[0] = (char*)allocate_heap_clean(500, 1);
+
+    for (int idx = 0; !feof(file); idx++, fileIdx++)
+    {
+        char* pomBuffer = (char*)allocate_heap_clean(1, 1);
+        fread(pomBuffer, 1, 1, file);
+
+        if (lineAlloc - 1 == fileIdx)
+        {
+            buffer[fileLine] = pomBuffer[0] == '\n' ?
+                (char*)reallocate_heap_block(buffer[fileLine], lineAlloc += 1, 1) :
+                (char*)reallocate_heap_block(buffer[fileLine], lineAlloc += 500, 1);
+        }
+
+        if (pomBuffer[0] == '\n')
+        {
+            buffer[fileLine][fileIdx] = '\0';
+
+            // Reallocate - Let buffer have allocated only space it needs for storge
+            buffer[fileLine] = (char*)reallocate_heap_block(buffer[fileLine], fileIdx + 1, 1);
+            fileLine += 1;
+            fileIdx = -1; // Increased at the end of the loop to 0
+
+            buffer = (char**)reallocate_heap_block(buffer, fileLine + 1, sizeof(char*));
+        }
+        else
+        {
+            buffer[fileLine][fileIdx] = pomBuffer[0];
+        }
+
+        free(pomBuffer);
+    }
+
+    return buffer;
 }
 
 
