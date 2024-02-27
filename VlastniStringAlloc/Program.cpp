@@ -3,6 +3,7 @@
 #include "DynamicStringLibrary.h"
 #include "FileStream.h"
 #include "List.h"
+#include "ArrayFunc.h"
 #include "AsyncTest.h"
 
 using namespace std;
@@ -70,11 +71,37 @@ void SimpleAsynchronousTest()
 
 int main()
 {
-    /*TestDynamicStringAllocation();
-    TestDynamicStringAllocation2();
-    TestDynamicStringAllocation3();*/
 
     char* content = FileStream::ReadAllText("test.txt");
+    
+    reverse_str(content);
+
+    int* arr = (int*)allocate_heap_clean(4, sizeof(int));
+
+    arr[0] = 1;
+    arr[1] = 2;
+    arr[2] = 3;
+    arr[3] = 4;
+
+    reverse_array<int>(arr, 4, sizeof(int));
+
+    cout << "Pre-sorted array : "  << endl;
+
+    for (int i = 0; i < 4; i++)
+    {
+        cout << "arr[" << i << "] = " << arr[i] << endl;
+    }
+
+    sort_array(arr, 4);
+
+    cout << "Sorted array : " << endl;
+
+    for (int i = 0; i < 4; i++)
+    {
+        cout << "arr[" << i << "] = " << arr[i] << endl;
+    }
+
+    return 0;
 
     const char* myArr[] =
     {

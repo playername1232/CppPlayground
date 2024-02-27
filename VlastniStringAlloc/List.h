@@ -38,6 +38,22 @@ public:
 		}
 	}
 
+	static char* ListToCharArray(List<char> _cList)
+	{
+		size_t listLen = _cList.GetCount();
+		// +1 for null terminator
+		char* ret = (char*)allocate_heap_clean(listLen + 1, 1);
+
+		for (size_t size = 0; size < listLen; size++)
+		{
+			ret[size] = _cList[size];
+		}
+
+		ret[listLen + 1] = '\0';
+
+		return ret;
+	}
+
 	/// <summary>
 	/// String currently non-functional!
 	/// </summary>
@@ -140,6 +156,19 @@ public:
 		}
 
 		this->TCollection = buffer;
+	}
+
+	void AddToEnd(T item)
+	{
+		// Hack solution. Reusing Add(T item) function for less repetive lines in the code
+		this->Add(item);
+
+		for (size_t i = this->CollectionSize - 1; i > 0; i--)
+		{
+			this->TCollection[i] = this->TCollection[i - 1];
+		}
+
+		this->TCollection[0] = item;
 	}
 
 	void Remove(T item)

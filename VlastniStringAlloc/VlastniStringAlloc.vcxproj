@@ -128,6 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ArrayFunc.cpp" />
     <ClCompile Include="AsyncTest.cpp" />
     <ClCompile Include="CustomMacros.cpp" />
     <ClCompile Include="DynamicStringLibrary.cpp" />
@@ -135,6 +136,7 @@
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArrayFunc.h" />
     <ClInclude Include="AsyncTest.h" />
     <ClInclude Include="CustomMacros.h" />
     <ClInclude Include="DynamicStringLibrary.h" />

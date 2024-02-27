@@ -80,12 +80,16 @@ public:
 
     void operator=(const char* entry);
     void operator+=(const char* entry);
+    char* operator*();
+
     template <class T>
     bool operator==(T object);
+
     template <class T>
     bool operator !=(T object);
+
     friend std::ostream& operator<<(std::ostream& os, const DynamicStringLibrary& _string);
-    char* operator*();
+
 };
 
 template<class T>
