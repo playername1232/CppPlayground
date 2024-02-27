@@ -49,6 +49,7 @@ char* FileStream::ReadAllText(const char* filePath)
 
     buffer = (char*)reallocate_heap_block(buffer, buffIdx + 1, 1);
 
+    fclose(file);
     return buffer;
 }
 
@@ -65,8 +66,7 @@ char** FileStream::ReadAllLines(const char* filePath)
     FILE* file;
     fopen_s(&file, filePath, "r");
 
-    if (file == nullptr)
-        throw std::exception("");
+    check(file);
 
     int fileIdx   = 0;
     int fileLine  = 0;
@@ -77,17 +77,19 @@ char** FileStream::ReadAllLines(const char* filePath)
 
     for (int idx = 0; !feof(file); idx++, fileIdx++)
     {
-        char* pomBuffer = (char*)allocate_heap_clean(1, 1);
-        fread(pomBuffer, 1, 1, file);
+        //char* pomBuffer = (char*)allocate_heap_clean(1, 1);
+
+        char* buffCharacter = (char*)allocate_heap_clean(2, 1);
+        fread(buffCharacter, 1, 1, file);
 
         if (lineAlloc - 1 == fileIdx)
         {
-            buffer[fileLine] = pomBuffer[0] == '\n' ?
+            buffer[fileLine] = buffCharacter[0] == '\n' ?
                 (char*)reallocate_heap_block(buffer[fileLine], lineAlloc += 1, 1) :
                 (char*)reallocate_heap_block(buffer[fileLine], lineAlloc += 500, 1);
         }
 
-        if (pomBuffer[0] == '\n')
+        if (buffCharacter[0] == '\n')
         {
             buffer[fileLine][fileIdx] = '\0';
 
@@ -96,16 +98,25 @@ char** FileStream::ReadAllLines(const char* filePath)
             fileLine += 1;
             fileIdx = -1; // Increased at the end of the loop to 0
 
+            // fileLine starts at 0 index. 0th index = reading 1st line
+            // 2nd line in file = fileLine = 1 + 1
             buffer = (char**)reallocate_heap_block(buffer, fileLine + 1, sizeof(char*));
+            buffer[fileLine] = (char*)allocate_heap_clean(500, 1);
+        }
+        else if (buffCharacter[0] == '\0')
+        {
+            buffer[fileLine][fileIdx] = '\0';
+            break;
         }
         else
         {
-            buffer[fileLine][fileIdx] = pomBuffer[0];
+            buffer[fileLine][fileIdx] = buffCharacter[0];
         }
-
-        free(pomBuffer);
     }
+    // Reallocate last line
+    buffer[fileLine] = (char*)reallocate_heap_block(buffer[fileLine], fileIdx + 1, 1);
 
+    fclose(file);
     return buffer;
 }
 
@@ -184,5 +195,6 @@ void FileStream::WriteAllLines(const char* filePath, const char** content, size_
 
     fwrite(stringBuilder, 1, currentIndex + 1, file);
 
+    fclose(file);
     free(stringBuilder);
 }

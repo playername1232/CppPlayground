@@ -4,6 +4,7 @@
 #include <malloc.h>
 #include <iostream>
 #include <Windows.h>
+#include <cassert>
 
 #ifndef DYNAMICSTRING
 #include "DynamicStringLibrary.h"
@@ -11,12 +12,11 @@
 
 #endif
 
-class MemoryHeader
-{
-private:
-	size_t byteSize;
-	void* heapBlockHead;
-};
+#define check(ptr) \
+assert(ptr != nullptr)
+
+#define check_len(len) \
+assert(len > 0);
 
 /// <summary>
 /// Converts const to variables

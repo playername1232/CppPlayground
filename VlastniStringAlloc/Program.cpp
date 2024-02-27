@@ -70,14 +70,11 @@ void SimpleAsynchronousTest()
 
 int main()
 {
-    char* text = FileStream::ReadAllText("D:\\Programy\\CppPlayground\\VlastniStringAlloc\\test.txt");
-
-    if (text == nullptr)
-        cout << "text is nullptr" << endl;
+    /*TestDynamicStringAllocation();
+    TestDynamicStringAllocation2();
+    TestDynamicStringAllocation3();*/
 
     char* content = FileStream::ReadAllText("test.txt");
-
-    cout << strlen(content);
 
     const char* myArr[] =
     {
@@ -87,6 +84,10 @@ int main()
     };
 
     FileStream::WriteAllLines("testCopy.txt", myArr, 3);
+
+    char** strArr = FileStream::ReadAllLines("test.txt");
+
+    cout << strArr[0] << endl << strArr[1] << endl;
 
     return 0;
 }
