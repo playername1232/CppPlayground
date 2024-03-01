@@ -28,13 +28,13 @@ public:
 		if (CollectionSize != 0)
 			free(TCollection);
 
-		TCollection = (T*)calloc(arrSize, sizeof(T));
+		TCollection = (T*)allocate_heap_clean(arrSize, sizeof(T));
 
 		CollectionSize = arrSize;
 
 		for (int i = 0; i < CollectionSize; i++)
 		{
-			TCollection = tArray[i];
+			TCollection[i] = tArray[i];
 		}
 	}
 
@@ -79,6 +79,7 @@ public:
 			isCharArr = true;
 		}
 
+		// String not working! To be remade!
 		if (isString || isCharArr)
 		{
 			std::ostringstream oss {};
@@ -87,9 +88,7 @@ public:
 			std::string pom = oss.str();
 			char* strBuffer = _strdup(pom.c_str());
 
-			if (strBuffer == nullptr)
-				throw std::exception("List.h has thrown an exception: ostringstream returned nullptr on strBuffer!");
-
+			check(strBuffer);
 
 			size_t strSize = strlen(strBuffer);
 
@@ -97,9 +96,7 @@ public:
 			{
 				try
 				{
-					char* pomStrBuffer = (char*)realloc(strBuffer, strSize + 1);
-					if (pomStrBuffer == nullptr)
-						throw std::exception("List.h has thrown an exception: failed to allocate strBuffer!");
+					char* pomStrBuffer = (char*)reallocate_heap_block(strBuffer, strSize, 1);
 
 					strBuffer = pomStrBuffer;
 					strBuffer[strSize] = '\0';
@@ -116,11 +113,9 @@ public:
 				if (this->TCollection != nullptr)
 					free(this->TCollection);
 
-				buffer = (T*)calloc(1, sizeof(char*));
-				if(buffer == nullptr)
-					throw std::exception("Exception thrown in List.h: buffer allocation failed!");
+				buffer = (T*)allocate_heap_clean(1, sizeof(char*));
 
-				char* pomStr = (char*)calloc(strSize, 1);
+				char* pomStr = (char*)allocate_heap_clean(strSize, 1);
 
 				for (size_t idx = 0; idx < strSize; idx++)
 					pomStr[idx] = strBuffer[idx];
@@ -129,11 +124,9 @@ public:
 			}
 			else
 			{
-				buffer = (T*)realloc(this->TCollection, (CollectionSize + 1) * sizeof(T*));
-				if (buffer == nullptr)
-					throw std::exception("Exception thrown in List.h: buffer allocation failed!");
+				buffer = (T*)reallocate_heap_block(this->TCollection, (this->CollectionSize + 1), sizeof(T*));
 
-				char* pomStr = (char*)calloc(strSize, 1);
+				char* pomStr = (char*)allocate_heap_clean(strSize, 1);
 
 				for (size_t idx = 0; idx < strSize; idx++)
 					pomStr[idx] = strBuffer[idx];
@@ -144,9 +137,9 @@ public:
 		else
 		{
 			if (CollectionSize == 1)
-				buffer = (T*)calloc(1, sizeof(T));
+				buffer = (T*)allocate_heap_clean(1, sizeof(T));
 			else
-				buffer = (T*)realloc(TCollection, CollectionSize * _sizePerElement);
+				buffer = (T*)reallocate_heap_block(this->TCollection, this->CollectionSize, sizeof(T));
 
 
 			if (buffer == nullptr)
@@ -179,16 +172,12 @@ public:
 			{
 				size_t _sizePerElement = sizeof(T);
 
-				T* buffer = (T*)realloc(TCollection, CollectionSize * _sizePerElement);
-				if (buffer == nullptr)
-					throw std::exception("List.h has thrown an exception: failed to allocate buffer!");
+				T* buffer = (T*)reallocate_heap_block(TCollection, CollectionSize * _sizePerElement);
 
 				for (int j = i; j < CollectionSize - 1; j++)
-					this->buffer[j] = this->TCollection[j + 1];
+					buffer[j] = this->TCollection[j + 1];
 
-				buffer = (T*)realloc(TCollection, (CollectionSize - 1) * _sizePerElement);
-				if (buffer == nullptr)
-					throw std::exception("List.h has thrown an exception: failed to allocate buffer!");
+				buffer = (T*)reallocate_heap_block(TCollection, (CollectionSize - 1) * _sizePerElement);
 
 				this->TCollection = buffer;
 
@@ -201,7 +190,6 @@ public:
 	{
 		free_heap(this->TCollection);
 		
-		this->TCollection = nullptr;
 		this->CollectionSize = 0;
 	}
 

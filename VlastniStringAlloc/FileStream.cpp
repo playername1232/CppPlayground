@@ -103,11 +103,6 @@ char** FileStream::ReadAllLines(const char* filePath)
             buffer = (char**)reallocate_heap_block(buffer, fileLine + 1, sizeof(char*));
             buffer[fileLine] = (char*)allocate_heap_clean(500, 1);
         }
-        else if (buffCharacter[0] == '\0')
-        {
-            buffer[fileLine][fileIdx] = '\0';
-            break;
-        }
         else
         {
             buffer[fileLine][fileIdx] = buffCharacter[0];
