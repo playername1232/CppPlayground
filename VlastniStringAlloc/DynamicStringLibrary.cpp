@@ -250,9 +250,9 @@ DynamicStringLibrary::DynamicStringLibrary(const char* entry)
 {
 	this->content = nullptr;
 	this->contentSize = 0;
-
+	
 	size_t strSize = 0;
-	// len counter no condition necessary
+	// len counter no condition necessary - to be remade using DEFAULT_ALLOC_BLOCK_SIZE
 	for (size_t i = 0; entry[i] != '\0'; i++, strSize++) {}
 
 	this->content = (char*)allocate_heap_clean(strSize, 1);
