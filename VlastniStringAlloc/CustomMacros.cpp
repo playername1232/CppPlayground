@@ -39,8 +39,8 @@ void* allocate_heap_clean(size_t _count, size_t _size)
 
 void* reallocate_heap_block(void* _block, size_t _newCount, size_t _newSize)
 {
-	check_len(_newCount);
-	check_len(_newSize);
+	check_size(_newCount);
+	check_size(_newSize);
 
 	void* _newBlock = realloc(_block, _newCount * _newSize);
 	check(_newBlock);

@@ -3,6 +3,9 @@
 #include <cctype>
 #include "CustomMacros.h"
 
+// Size of allocations in Bytes
+#define DEFAULT_ALLOC_BLOCK_SIZE 500;
+
 /// <summary>
 /// Checks for buffer overflow, increases memory allocation if the overflow would occur
 /// </summary>
@@ -10,19 +13,21 @@
 /// <param name="index">Used index</param>
 /// <param name="bufferAllocSize">Allocated size</param>
 /// <returns></returns>
-static bool CheckForBufferOverflow(char*& arr, size_t index, int& bufferAllocSize)
+static void CheckForBufferOverflow(char*& arr, size_t index, int& bufferAllocSize)
 {
-	if (arr == nullptr)
-		return false;
+	check(arr);
+
+	check_size(index);
+	check_size(bufferAllocSize);
 
 	if (index > (bufferAllocSize - 1)) // Index 9 = length 10 therefore max allocated size is 10
 	{
-		bufferAllocSize += 1;
+		bufferAllocSize += DEFAULT_ALLOC_BLOCK_SIZE;
 		char* buffer = (char*)reallocate_heap_block(arr, bufferAllocSize, 1);
+		check(buffer);
 
 		arr = buffer;
 	}
-	return true;
 }
 
 char* DynamicStringLibrary::CreateDynamicString(const char* str, size_t len)
@@ -56,7 +61,7 @@ char* DynamicStringLibrary::CreateDynamicString(const char* str, size_t len)
 
 char* DynamicStringLibrary::ConcatenateDynamicString(const char* str, const char* concate, const char splitter)
 {
-	int _currentBufferAlloc = 2;
+	int _currentBufferAlloc = DEFAULT_ALLOC_BLOCK_SIZE;
 	size_t currentIndex = 0,
 		   lastIndexOfStr = 0;
 
@@ -64,17 +69,14 @@ char* DynamicStringLibrary::ConcatenateDynamicString(const char* str, const char
 
 	for (int i = 0; str[i] != '\0'; i++, currentIndex += 1)
 	{
-		if (CheckForBufferOverflow(buffer, currentIndex, _currentBufferAlloc) == false)
-			throw std::exception("Failed to initialize buffer!");
-
+		CheckForBufferOverflow(buffer, currentIndex, _currentBufferAlloc);
 		buffer[currentIndex] = str[currentIndex];
 	}
 
 
-	if (splitter != NULL)
+	if (splitter != '\0')
 	{
-		if (CheckForBufferOverflow(buffer, currentIndex, _currentBufferAlloc) == false)
-			throw std::exception("Failed to initialize buffer!");
+		CheckForBufferOverflow(buffer, currentIndex, _currentBufferAlloc);
 
 		buffer[currentIndex] = splitter;
 		currentIndex += 1;
@@ -83,19 +85,18 @@ char* DynamicStringLibrary::ConcatenateDynamicString(const char* str, const char
 
 	for (int i = 0; concate[i] != '\0'; i++, currentIndex += 1)
 	{
-		if (CheckForBufferOverflow(buffer, currentIndex, _currentBufferAlloc) == false)
-			throw std::exception("Failed to initialize buffer!");
-
+		CheckForBufferOverflow(buffer, currentIndex, _currentBufferAlloc);
 		buffer[currentIndex] = concate[i];
 	}
 
 	if (buffer[currentIndex] != '\0')
 	{
-		if (CheckForBufferOverflow(buffer, currentIndex, _currentBufferAlloc) == false)
-			throw std::exception("Failed to initialize buffer!");
-
+		CheckForBufferOverflow(buffer, currentIndex, _currentBufferAlloc);
 		buffer[currentIndex] = '\0';
 	}
+
+	// Resize the buffer to its content size 
+	buffer = (char*)reallocate_heap_block(buffer, currentIndex + 1, 1);
 
 	return buffer;
 }
@@ -167,20 +168,41 @@ void DynamicStringLibrary::ExtractFirstDynamicString(char*& str, const char* ext
 
 char* DynamicStringLibrary::CopyDynamicString(const char* str)
 {
-	size_t strLength = 0;
+	size_t i = 0;
+	size_t currentAlloc = DEFAULT_ALLOC_BLOCK_SIZE;
 
-	while (str[strLength] != '\0')
-		++strLength;
 
-	char* buffer = (char*)allocate_heap_clean(strLength + 1, 1); // +1 for the null terminator
+	char* buffer = (char*)allocate_heap_clean(currentAlloc, 1);
 
-	for (size_t i = 0; i < strLength; ++i) {
+	for (/* i = 0 */ ; str[i] != '\0'; i++)
+	{
+		if (i == (currentAlloc - 1))
+		{
+			currentAlloc += DEFAULT_ALLOC_BLOCK_SIZE;
+			buffer = (char*)reallocate_heap_block(buffer, currentAlloc, 1);
+		}
+
 		buffer[i] = str[i];
 	}
 
-	// Add the null terminator at the end of buffer
-	buffer[strLength] = '\0';
+	// Add the null terminator at the end of buffer - Sanity check
+	if (buffer[i] != '\0')
+	{
+		i += 1;
 
+		if (i == (currentAlloc - 1))
+		{
+			currentAlloc += 1;
+			buffer = (char*)reallocate_heap_block(buffer, currentAlloc, 1);
+
+			return buffer;
+		}
+
+		buffer[i] = '\0';
+	}
+
+	// Reallocate buffer according to content
+	buffer = (char*)reallocate_heap_block(buffer, i + 1, 1);
 	return buffer;
 }
 

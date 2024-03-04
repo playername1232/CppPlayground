@@ -10,8 +10,8 @@ void reverse_str(char* str);
 template<class T>
 void reverse_array(T* arr, size_t count, size_t size)
 {
-	check_len(count);
-	check_len(size);
+	check_size(count);
+	check_size(size);
 	
 	T* copy = (T*)allocate_heap_clean(count, size);
 	for (size_t idx = 0; idx < count; idx++)
