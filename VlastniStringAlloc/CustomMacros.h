@@ -15,7 +15,7 @@
 #define check(ptr) \
 assert(ptr != nullptr)
 
-#define check_len(len) \
+#define check_size(len) \
 assert(len > 0);
 
 /// <summary>
