@@ -69,11 +69,10 @@ void SimpleAsynchronousTest()
     xd.GeneralTest();
 }
 
-int main()
+void TestFileWriteAndRead()
 {
-
     char* content = FileStream::ReadAllText("test.txt");
-    
+
     reverse_str(content);
 
     int* arr = (int*)allocate_heap_clean(4, sizeof(int));
@@ -85,7 +84,7 @@ int main()
 
     reverse_array<int>(arr, 4, sizeof(int));
 
-    cout << "Pre-sorted array : "  << endl;
+    cout << "Pre-sorted array : " << endl;
 
     for (int i = 0; i < 4; i++)
     {
@@ -101,8 +100,6 @@ int main()
         cout << "arr[" << i << "] = " << arr[i] << endl;
     }
 
-    return 0;
-
     const char* myArr[] =
     {
         "Tohle je prvni Radek",
@@ -115,6 +112,14 @@ int main()
     char** strArr = FileStream::ReadAllLines("test.txt");
 
     cout << strArr[0] << endl << strArr[1] << endl;
+}
+
+int main()
+{
+    DynamicStringLibrary str("Neco");
+    str += " cau";
+
+    cout << str.GetContent();
 
     return 0;
 }

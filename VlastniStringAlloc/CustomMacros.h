@@ -21,6 +21,12 @@ assert(ptr != nullptr)
 #define check_size(len) \
 assert(len > 0);
 
+#define check_size_allow_zero(len) \
+assert(len >= 0);
+
+#define ensure(cond) \
+assert(cond == true);
+
 /// <summary>
 /// Converts const to variables
 /// </summary>

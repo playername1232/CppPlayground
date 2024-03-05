@@ -14,16 +14,14 @@ static void CheckForBufferOverflow(char*& arr, size_t index, int& bufferAllocSiz
 {
 	check(arr);
 
-	check_size(index);
+	// Edit: check_size_allow_zero(len) as index can be zero
+	check_size_allow_zero(index);
 	check_size(bufferAllocSize);
 
 	if (index > (bufferAllocSize - 1)) // Index 9 = length 10 therefore max allocated size is 10
 	{
 		bufferAllocSize += DEFAULT_ALLOC_BLOCK_SIZE;
-		char* buffer = (char*)reallocate_heap_block(arr, bufferAllocSize, 1);
-		check(buffer);
-
-		arr = buffer;
+		arr = (char*)reallocate_heap_block(arr, bufferAllocSize, 1);
 	}
 }
 
@@ -248,94 +246,84 @@ DynamicStringLibrary::DynamicStringLibrary(const char* entry)
 	this->content = nullptr;
 	this->contentSize = 0;
 	
-	size_t strSize = 0;
+	int arrAlloc = DEFAULT_ALLOC_BLOCK_SIZE;
 	// len counter no condition necessary - to be remade using DEFAULT_ALLOC_BLOCK_SIZE
 	
 	// for (size_t i = 0; entry[i] != '\0'; i++, strSize++) {}
 
-	this->content = (char*)allocate_heap_clean(strSize, 1);
+	this->content = (char*)allocate_heap_clean(arrAlloc, 1);
 
-	for (size_t i = 0; i < strSize; i++)
+	for (size_t i = 0; entry[i] != '\0'; i++, this->contentSize++)
 	{
+		CheckForBufferOverflow(this->content, i, arrAlloc);
+
 		this->content[i] = entry[i];
-
-		if (i == strSize - 1)
-		{
-			if (this->content[i] != '\0')
-			{				
-				char* buffer = (char*)reallocate_heap_block(this->content, strSize + 1, 1);
-
-				buffer[i + 1] = '\0';
-
-				this->content = buffer;
-				this->contentSize = 1; // Count the null terminator
-			}
-
-			this->contentSize += strSize; // add string size
-			return;
-		}
 	}
+
+	this->content = (char*)reallocate_heap_block(this->content, this->contentSize, 1);
 }
 
 void DynamicStringLibrary::operator=(const char* entry)
 {
 	if (this->content != nullptr)
 		free_heap(this->content);
+	this->contentSize = 0;
+
 	this->content = const_cast<char*>(entry);
+	for (int i = 0; this->content[i] != '\0'; i++)
+		this->contentSize += 1;
+
+	// Increment null terminator
+	this->contentSize += 1;
 }
 
 void DynamicStringLibrary::operator+=(const char* entry)
 {
-	size_t strSize = 0;
+	check(entry);
 
-	// len counter no condition necessary
-	for (size_t i = 0; entry[i] != '\0'; i++, strSize++) { }
+	// Size must not be negative
+	check_size_allow_zero(this->contentSize);
+
+	int arrayAlloc = DEFAULT_ALLOC_BLOCK_SIZE;
 
 	if(this->contentSize == 0)
 	{
-		this->content = (char*)allocate_heap_clean(strSize, 1);
+		if (this->content != nullptr)
+			free_heap(this->content);
 
-		for (size_t i = 0; i < strSize; i++)
+		this->content = (char*)allocate_heap_clean(arrayAlloc, 1);
+
+		for (size_t i = 0; entry[i] != '\0'; i++)
 		{
+			CheckForBufferOverflow(this->content, i, arrayAlloc);
+
 			this->content[i] = entry[i];
-
-			if (i == strSize - 1)
-			{
-				if (this->content[i] != '\0')
-				{
-					char* buffer = (char*)allocate_heap_clean(strSize, 1 + 1);
-					buffer[i + 1] = '\0';
-
-					this->content = buffer;
-					this->contentSize = 1; // Count the null terminator
-				}
-
-				this->contentSize += strSize; // add string size
-				return;
-			}
+			this->contentSize += 1;
 		}
+
+		this->content = (char*)reallocate_heap_block(this->content, this->contentSize, 1);
+		return;
 	}
 
-	char* buffer = (char*)reallocate_heap_block(this->content, (this->contentSize - 1) + strSize, 1); // excluding null terminator from content (it is included in entry size)
-
-	for (size_t i = 0; i < strSize; i++)
+	while (arrayAlloc < this->contentSize)
 	{
-		// null terminator is located on buffer[size - 1] -> "abc" = 4 len > "abc"[3] = '\0'
-		buffer[(this->contentSize - 1) + i] = entry[i];
-
-		if (i == strSize - 1)
-		{
-			if (entry[i] != '\0')
-			{
-				this->content = (char*)reallocate_heap_block(buffer, this->contentSize + strSize, 1);
-				
-				this->content[contentSize + i] = '\0';
-				this->contentSize += 1;
-
-				return;
-			}
-		}
+		arrayAlloc += DEFAULT_ALLOC_BLOCK_SIZE;
 	}
+
+	if (this->content[this->contentSize - 1] != '\0')
+		this->contentSize += 1;
+
+	// Returns invalid string. To be debugged
+
+	for (int i = 0; entry[i] != '\0'; i++, this->contentSize++)
+	{
+		CheckForBufferOverflow(this->content, this->contentSize, arrayAlloc);
+
+		this->content[this->contentSize - 1] = entry[i];
+	}
+
+	this->content = (char*)reallocate_heap_block(this->content, this->contentSize += 1, 1);
+	this->content[this->contentSize - 1] = '\0';
 }
 
 char* DynamicStringLibrary::operator*()
