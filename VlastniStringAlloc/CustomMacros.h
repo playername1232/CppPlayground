@@ -12,6 +12,9 @@
 
 #endif
 
+// Size of allocations in Bytes
+#define DEFAULT_ALLOC_BLOCK_SIZE 1000;
+
 #define check(ptr) \
 assert(ptr != nullptr)
 

@@ -3,9 +3,6 @@
 #include <cctype>
 #include "CustomMacros.h"
 
-// Size of allocations in Bytes
-#define DEFAULT_ALLOC_BLOCK_SIZE 500;
-
 /// <summary>
 /// Checks for buffer overflow, increases memory allocation if the overflow would occur
 /// </summary>
@@ -253,7 +250,8 @@ DynamicStringLibrary::DynamicStringLibrary(const char* entry)
 	
 	size_t strSize = 0;
 	// len counter no condition necessary - to be remade using DEFAULT_ALLOC_BLOCK_SIZE
-	for (size_t i = 0; entry[i] != '\0'; i++, strSize++) {}
+	
+	// for (size_t i = 0; entry[i] != '\0'; i++, strSize++) {}
 
 	this->content = (char*)allocate_heap_clean(strSize, 1);
 
