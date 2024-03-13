@@ -7,7 +7,7 @@
 #include <cassert>
 
 #ifndef DYNAMICSTRING
-#include "DynamicStringLibrary.h"
+#include "../Dynamic String Lib/DynamicStringLibrary.h"
 #endif
 
 #endif
@@ -15,16 +15,16 @@
 // Size of allocations in Bytes
 #define DEFAULT_ALLOC_BLOCK_SIZE 1000;
 
-#define check(ptr) \
+#define CHECK(ptr) \
 assert(ptr != nullptr)
 
-#define check_size(len) \
+#define CHECK_SIZE(len) \
 assert(len > 0);
 
-#define check_size_allow_zero(len) \
+#define CHECK_SIZE_ALLOW_ZERO(len) \
 assert(len >= 0);
 
-#define ensure(cond) \
+#define ENSURE(cond) \
 assert(cond == true);
 
 /// <summary>

@@ -1,8 +1,8 @@
 #pragma once
 
 #ifndef ARRFUNCDEFINE
-#include "CustomMacros.h"
-#include "List.h"
+#include "../MacroUtility/CustomMacros.h"
+#include "../List Utility/List.h"
 #endif
 
 void reverse_str(char* str);
@@ -10,8 +10,8 @@ void reverse_str(char* str);
 template<class T>
 void reverse_array(T* arr, size_t count, size_t size)
 {
-	check_size(count);
-	check_size(size);
+	CHECK_SIZE(count);
+	CHECK_SIZE(size);
 	
 	T* copy = (T*)allocate_heap_clean(count, size);
 	for (size_t idx = 0; idx < count; idx++)

@@ -1,7 +1,7 @@
 #include "DynamicStringLibrary.h"
 #include <iostream>
 #include <cctype>
-#include "CustomMacros.h"
+#include "../MacroUtility/CustomMacros.h"
 
 /// <summary>
 /// Checks for buffer overflow, increases memory allocation if the overflow would occur
@@ -12,11 +12,11 @@
 /// <returns></returns>
 static void CheckForBufferOverflow(char*& arr, size_t index, int& bufferAllocSize)
 {
-	check(arr);
+	CHECK(arr);
 
 	// Edit: check_size_allow_zero(len) as index can be zero
-	check_size_allow_zero(index);
-	check_size(bufferAllocSize);
+	CHECK_SIZE_ALLOW_ZERO(index);
+	CHECK_SIZE(bufferAllocSize);
 
 	if (index > (bufferAllocSize - 1)) // Index 9 = length 10 therefore max allocated size is 10
 	{
@@ -56,22 +56,22 @@ char* DynamicStringLibrary::CreateDynamicString(const char* str, size_t len)
 
 char* DynamicStringLibrary::ConcatenateDynamicString(const char* str, const char* concate, const char splitter)
 {
-	int _currentBufferAlloc = DEFAULT_ALLOC_BLOCK_SIZE;
+	int current_buffer_alloc = DEFAULT_ALLOC_BLOCK_SIZE;
 	size_t currentIndex = 0,
 		   lastIndexOfStr = 0;
 
-	char* buffer = (char*)allocate_heap_clean(_currentBufferAlloc, 1);
+	char* buffer = (char*)allocate_heap_clean(current_buffer_alloc, 1);
 
 	for (int i = 0; str[i] != '\0'; i++, currentIndex += 1)
 	{
-		CheckForBufferOverflow(buffer, currentIndex, _currentBufferAlloc);
+		CheckForBufferOverflow(buffer, currentIndex, current_buffer_alloc);
 		buffer[currentIndex] = str[currentIndex];
 	}
 
 
 	if (splitter != '\0')
 	{
-		CheckForBufferOverflow(buffer, currentIndex, _currentBufferAlloc);
+		CheckForBufferOverflow(buffer, currentIndex, current_buffer_alloc);
 
 		buffer[currentIndex] = splitter;
 		currentIndex += 1;
@@ -80,13 +80,13 @@ char* DynamicStringLibrary::ConcatenateDynamicString(const char* str, const char
 
 	for (int i = 0; concate[i] != '\0'; i++, currentIndex += 1)
 	{
-		CheckForBufferOverflow(buffer, currentIndex, _currentBufferAlloc);
+		CheckForBufferOverflow(buffer, currentIndex, current_buffer_alloc);
 		buffer[currentIndex] = concate[i];
 	}
 
 	if (buffer[currentIndex] != '\0')
 	{
-		CheckForBufferOverflow(buffer, currentIndex, _currentBufferAlloc);
+		CheckForBufferOverflow(buffer, currentIndex, current_buffer_alloc);
 		buffer[currentIndex] = '\0';
 	}
 
@@ -260,7 +260,11 @@ DynamicStringLibrary::DynamicStringLibrary(const char* entry)
 		this->content[i] = entry[i];
 	}
 
+	// Add null terminator
+	this->contentSize += 1;
 	this->content = (char*)reallocate_heap_block(this->content, this->contentSize, 1);
+
+	this->content[contentSize - 1] = '\0';
 }
 
 void DynamicStringLibrary::operator=(const char* entry)
@@ -279,10 +283,10 @@ void DynamicStringLibrary::operator=(const char* entry)
 
 void DynamicStringLibrary::operator+=(const char* entry)
 {
-	check(entry);
+	CHECK(entry);
 
 	// Size must not be negative
-	check_size_allow_zero(this->contentSize);
+	CHECK_SIZE_ALLOW_ZERO(this->contentSize);
 
 	int arrayAlloc = DEFAULT_ALLOC_BLOCK_SIZE;
 
@@ -302,6 +306,7 @@ void DynamicStringLibrary::operator+=(const char* entry)
 		}
 
 		this->content = (char*)reallocate_heap_block(this->content, this->contentSize, 1);
+
 		return;
 	}
 
@@ -317,13 +322,21 @@ void DynamicStringLibrary::operator+=(const char* entry)
 
 	for (int i = 0; entry[i] != '\0'; i++, this->contentSize++)
 	{
+		// Resize if overflow
 		CheckForBufferOverflow(this->content, this->contentSize, arrayAlloc);
 
 		this->content[this->contentSize - 1] = entry[i];
 	}
 
-	this->content = (char*)reallocate_heap_block(this->content, this->contentSize += 1, 1);
+	std::cout << content[7];
+	std::cout << content[8];
 	this->content[this->contentSize - 1] = '\0';
+
+	// Realloc corrupts array
+ 	this->content = (char*)reallocate_heap_block(this->content, this->contentSize, 1);
+
+	std::cout << content[7] << std::endl;
+	std::cout << content[8] << std::endl;
 }
 
 char* DynamicStringLibrary::operator*()

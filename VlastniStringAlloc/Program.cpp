@@ -1,10 +1,10 @@
 ﻿#include <iostream>
 #include <string>
-#include "DynamicStringLibrary.h"
-#include "FileStream.h"
-#include "List.h"
-#include "ArrayFunc.h"
-#include "AsyncTest.h"
+#include "AsyncTesting/AsyncTest.h"
+#include "File Operations/FileStream.h"
+#include "Utilities/ArrayUtility/ArrayFunc.h"
+#include "Utilities/Dynamic String Lib/DynamicStringLibrary.h"
+#include "Utilities/MacroUtility/CustomMacros.h"
 
 using namespace std;
 
@@ -116,6 +116,14 @@ void TestFileWriteAndRead()
 
 int main()
 {
+
+    TestFileWriteAndRead();
+
+    DynamicStringLibrary myStr("Ahojda");
+
+    
+    
+    return 0;
     DynamicStringLibrary str("Neco");
     str += " cau";
 
