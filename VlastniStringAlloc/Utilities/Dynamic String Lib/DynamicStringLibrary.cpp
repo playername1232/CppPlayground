@@ -335,8 +335,8 @@ void DynamicStringLibrary::operator+=(const char* entry)
 	// Realloc corrupts array
  	this->content = (char*)reallocate_heap_block(this->content, this->contentSize, 1);
 
-	std::cout << content[7] << std::endl;
-	std::cout << content[8] << std::endl;
+	std::cout << content[7] << '\n';
+	std::cout << content[8] << '\n';
 }
 
 char* DynamicStringLibrary::operator*()
