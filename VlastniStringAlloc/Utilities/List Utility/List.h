@@ -1,7 +1,7 @@
 #pragma once
 #ifndef MALLOCDEF
 #include <malloc.h>
-#include "CustomMacros.h"
+#include "../MacroUtility/CustomMacros.h"
 #endif // !LISTDEF
 
 #ifndef STREAMDEF
@@ -88,7 +88,7 @@ public:
 			std::string pom = oss.str();
 			char* strBuffer = _strdup(pom.c_str());
 
-			check(strBuffer);
+			CHECK(strBuffer);
 
 			size_t strSize = strlen(strBuffer);
 

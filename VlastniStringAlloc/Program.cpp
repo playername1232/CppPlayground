@@ -1,10 +1,9 @@
 ﻿#include <iostream>
-#include <string>
-#include "DynamicStringLibrary.h"
-#include "FileStream.h"
-#include "List.h"
-#include "ArrayFunc.h"
-#include "AsyncTest.h"
+#include "AsyncTesting/AsyncTest.h"
+#include "File Operations/FileStream.h"
+#include "Utilities/ArrayUtility/ArrayFunc.h"
+#include "Utilities/Dynamic String Lib/DynamicStringLibrary.h"
+#include "Utilities/MacroUtility/CustomMacros.h"
 
 using namespace std;
 
@@ -14,35 +13,34 @@ void TestDynamicStringAllocation()
     char xd[11] = { 'c', 'a', 'u', 'k', 'y', ' ', 's', 'u', ' ', 'o', 'k' };
     char* myarr2 = DynamicStringLibrary::CreateDynamicString(xd, 11);
 
-    cout << "myarr = " << myarr << endl;
+    cout << "myarr = " << myarr << '\n';
 
     char* res = DynamicStringLibrary::ConcatenateDynamicString(myarr, myarr2, ' ');
-    cout << "res = " << res << endl;
+    cout << "res = " << res << '\n';
 
     char* toExtract = DynamicStringLibrary::CreateDynamicString("afgabcde", 9);
     DynamicStringLibrary::ExtractFirstDynamicString(toExtract, "ab", 2);
-    cout << "toExtract: " << toExtract << endl;
+    cout << "toExtract: " << toExtract << '\n';
 
 
     char* copied = DynamicStringLibrary::CopyDynamicString(toExtract);
-    cout << "copied: " << copied << endl;
+    cout << "copied: " << copied << '\n';
 
     const char* compared = DynamicStringLibrary::CompareDynamicString("abce", "abcde") ? "true" : "false";
-    cout << "Compared: " << compared << endl;
+    cout << "Compared: " << compared << '\n';
 
     char* reverse = DynamicStringLibrary::ReverseDynamicString("abcde");
-    cout << "Reversed: " << reverse << endl;
-    cin;
+    cout << "Reversed: " << reverse << '\n';
 }
 
 void TestDynamicStringAllocation2()
 {
     DynamicStringLibrary str = "xdd";
 
-    cout << "current str = " << str << endl;
+    cout << "current str = " << str << '\n';
     str += " cau";
 
-    cout << "updated str = " << str << endl;
+    cout << "updated str = " << str << '\n';
 }
 
 void TestDynamicStringAllocation3()
@@ -52,7 +50,7 @@ void TestDynamicStringAllocation3()
 
     DynamicStringLibrary res = (str1 == str2 ? "true" : "false");
 
-    cout << "are strings \"" << str1 << "\" and \"" << str2 << "\" same? : " << res << endl;
+    cout << "are strings \"" << str1 << "\" and \"" << str2 << "\" same? : " << res << '\n';
 
     DynamicStringLibrary str3 = "ahoj";
     DynamicStringLibrary str4 = "cau";
@@ -84,20 +82,20 @@ void TestFileWriteAndRead()
 
     reverse_array<int>(arr, 4, sizeof(int));
 
-    cout << "Pre-sorted array : " << endl;
+    cout << "Pre-sorted array : " << '\n';
 
     for (int i = 0; i < 4; i++)
     {
-        cout << "arr[" << i << "] = " << arr[i] << endl;
+        cout << "arr[" << i << "] = " << arr[i] << '\n';
     }
 
     sort_array(arr, 4);
 
-    cout << "Sorted array : " << endl;
+    cout << "Sorted array : " << '\n';
 
     for (int i = 0; i < 4; i++)
     {
-        cout << "arr[" << i << "] = " << arr[i] << endl;
+        cout << "arr[" << i << "] = " << arr[i] << '\n';
     }
 
     const char* myArr[] =
@@ -111,7 +109,7 @@ void TestFileWriteAndRead()
 
     char** strArr = FileStream::ReadAllLines("test.txt");
 
-    cout << strArr[0] << endl << strArr[1] << endl;
+    cout << strArr[0] << '\n' << strArr[1] << '\n';
 }
 
 int main()

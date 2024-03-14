@@ -75,8 +75,8 @@ public:
     //~DynamicStringLibrary() { free(this->content); }
 
     // For now until I find out what's wrong with operator* overload
-    char* GetContent() { return this->content; }
-    size_t GetSize() { return this->contentSize; }
+    char* GetContent() const { return this->content; }
+    size_t GetSize() const { return this->contentSize; }
 
     void operator=(const char* entry);
     void operator+=(const char* entry);
