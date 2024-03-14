@@ -1,3 +1,4 @@
+// ReSharper disable CppMultiCharacterLiteral
 #include "AsyncTest.h"
 
 using namespace std;
@@ -19,7 +20,7 @@ void AsyncTest::Test1()
 
 	cout << '\n\n' << "Test1() call: Test2() finished!" << '\n\n';
 	
-	cout << '\n\n' << "Test3() laucnhed!" << '\n\n';
+	cout << '\n\n' << "Test3() launched!" << '\n\n';
 
 	future<void> launch3rd = async(launch::async, &AsyncTest::Test3, this);
 

@@ -12,11 +12,11 @@
 /// <returns></returns>
 static void CheckForBufferOverflow(char*& arr, size_t index, int& bufferAllocSize)
 {
-	CHECK(arr);
+	check(arr);
 
 	// Edit: check_size_allow_zero(len) as index can be zero
-	CHECK_SIZE_ALLOW_ZERO(index);
-	CHECK_SIZE(bufferAllocSize);
+	check_size_allow_zero(index);
+	check_size(bufferAllocSize);
 
 	if (index > (bufferAllocSize - 1)) // Index 9 = length 10 therefore max allocated size is 10
 	{
@@ -283,10 +283,10 @@ void DynamicStringLibrary::operator=(const char* entry)
 
 void DynamicStringLibrary::operator+=(const char* entry)
 {
-	CHECK(entry);
+	check(entry);
 
 	// Size must not be negative
-	CHECK_SIZE_ALLOW_ZERO(this->contentSize);
+	check_size_allow_zero(this->contentSize);
 
 	int arrayAlloc = DEFAULT_ALLOC_BLOCK_SIZE;
 
