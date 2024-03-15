@@ -351,6 +351,8 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="Utilities\ConversionsUtility\Conversions.cpp" />
+    <ClCompile Include="Utilities\CustomUtility.cpp" />
     <ClCompile Include="Utilities\Dynamic String Lib\DynamicStringLibrary.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -504,6 +506,8 @@
     <ClInclude Include="AsyncTesting\AsyncTest.h" />
     <ClInclude Include="File Operations\FileStream.h" />
     <ClInclude Include="Utilities\ArrayUtility\ArrayFunc.h" />
+    <ClInclude Include="Utilities\ConversionsUtility\Conversions.h" />
+    <ClInclude Include="Utilities\CustomUtility.h" />
     <ClInclude Include="Utilities\Dynamic String Lib\DynamicStringLibrary.h" />
     <ClInclude Include="Utilities\List Utility\List.h" />
     <ClInclude Include="Utilities\MacroUtility\CustomMacros.h" />

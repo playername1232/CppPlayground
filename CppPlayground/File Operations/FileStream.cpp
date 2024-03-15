@@ -1,5 +1,5 @@
 #include "FileStream.h"
-#include "CustomMacros.h"
+#include "../Utilities/MacroUtility/CustomMacros.h"
 #include <iostream>
 #include <fstream>
 
@@ -10,7 +10,7 @@ char* FileStream::ReadAllText(const char* filePath)
     // After reading is done, resize the pointer to string's length
 
     size_t allocSize = 500;
-    char* buffer = (char*)allocate_heap_clean(allocSize, 1);
+    char* buffer = static_cast<char*>(allocate_heap_clean(allocSize, 1));
     size_t buffIdx = 0;
 
     FILE* file; 
@@ -28,7 +28,7 @@ char* FileStream::ReadAllText(const char* filePath)
             buffer = (char*)reallocate_heap_block(buffer, allocSize, 1);
         }
 
-        char* pomBuffer = (char*)allocate_heap_clean(1, 1);
+        char* pomBuffer = static_cast<char*>(allocate_heap_clean(1, 1));
         fread(pomBuffer, 1, 1, file);
 
         buffer[buffIdx] = pomBuffer[0];

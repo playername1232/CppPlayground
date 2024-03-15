@@ -88,7 +88,7 @@ public:
 			std::string pom = oss.str();
 			char* strBuffer = _strdup(pom.c_str());
 
-			CHECK(strBuffer);
+			check(strBuffer);
 
 			size_t strSize = strlen(strBuffer);
 

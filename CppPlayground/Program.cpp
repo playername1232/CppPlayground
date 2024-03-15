@@ -2,6 +2,7 @@
 #include "AsyncTesting/AsyncTest.h"
 #include "File Operations/FileStream.h"
 #include "Utilities/ArrayUtility/ArrayFunc.h"
+#include "Utilities/ConversionsUtility/Conversions.h"
 #include "Utilities/Dynamic String Lib/DynamicStringLibrary.h"
 #include "Utilities/MacroUtility/CustomMacros.h"
 
@@ -114,10 +115,17 @@ void TestFileWriteAndRead()
 
 int main()
 {
-    DynamicStringLibrary str("Neco");
-    str += " cau";
+    int num = 120;
 
-    cout << str.GetContent();
+    char* str = Conversions::DecToBin<int>(num, 32); // size in bytes * 8 bits
 
+    cout << num << " in binary: " << str << '\n';
+
+    //cout << "beauty binary: " << Conversions::BeautyPrintBinary(str, 32) << '\n';
+
+    int numBack = Conversions::BinToDec(str, 32);
+
+    cout << "Binary: " << str << " = " << numBack << " in Dec";
+    
     return 0;
 }

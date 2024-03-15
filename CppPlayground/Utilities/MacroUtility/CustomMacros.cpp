@@ -9,7 +9,7 @@ void TestingAllocFunction(void* block)
 
 void free_heap(void* _block)
 {
-	CHECK(_block);
+	check(_block);
 
 	free(_block);
 	_block = nullptr;
@@ -21,7 +21,7 @@ void* allocate_heap(size_t _count, size_t _size)
 		return nullptr;
 
 	void* _newBlock = malloc(_count * _size);
-	CHECK(_newBlock);
+	check(_newBlock);
 
 	return _newBlock;
 }
@@ -32,18 +32,18 @@ void* allocate_heap_clean(size_t _count, size_t _size)
 		return nullptr;
 
 	void* _newBlock = calloc(_count, _size);
-	CHECK(_newBlock);
+	check(_newBlock);
 
 	return _newBlock;
 }
 
 void* reallocate_heap_block(void* _block, size_t _newCount, size_t _newSize)
 {
-	CHECK_SIZE(_newCount);
-	CHECK_SIZE(_newSize);
+	check_size(_newCount);
+	check_size(_newSize);
 
 	void* _newBlock = realloc(_block, _newCount * _newSize);
-	CHECK(_newBlock);
+	check(_newBlock);
 
 	return _newBlock;
 }

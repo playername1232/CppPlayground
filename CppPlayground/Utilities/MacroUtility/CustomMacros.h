@@ -15,16 +15,16 @@
 // Size of allocations in Bytes
 #define DEFAULT_ALLOC_BLOCK_SIZE 1000;
 
-#define CHECK(ptr) \
+#define check(ptr) \
 assert(ptr != nullptr)
 
-#define CHECK_SIZE(len) \
+#define check_size(len) \
 assert(len > 0);
 
-#define CHECK_SIZE_ALLOW_ZERO(len) \
+#define check_size_allow_zero(len) \
 assert(len >= 0);
 
-#define ENSURE(cond) \
+#define ensure(cond) \
 assert(cond == true);
 
 /// <summary>
