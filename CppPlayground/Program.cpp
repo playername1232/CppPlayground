@@ -73,7 +73,7 @@ void TestFileWriteAndRead()
 
     reverse_str(content);
 
-    int* arr = (int*)allocate_heap_clean(4, sizeof(int));
+    int* arr = static_cast<int*>(allocate_heap_clean(4, sizeof(int)));
 
     arr[0] = 1;
     arr[1] = 2;

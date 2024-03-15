@@ -333,7 +333,7 @@ void DynamicStringLibrary::operator+=(const char* entry)
 	this->content[this->contentSize - 1] = '\0';
 
 	// Realloc corrupts array
- 	this->content = (char*)reallocate_heap_block(this->content, this->contentSize, 1);
+ 	this->content = static_cast<char*>(reallocate_heap_block(this->content, this->contentSize, 1));
 
 	std::cout << content[7] << '\n';
 	std::cout << content[8] << '\n';
@@ -346,8 +346,8 @@ char* DynamicStringLibrary::operator*()
 	return this->content;
 }
 
-std::ostream& operator<<(std::ostream& os, const DynamicStringLibrary& _string)
+std::ostream& operator<<(std::ostream& os, const DynamicStringLibrary& str)
 {
-	os << _string.content;
+	os << str.content;
 	return os;
 }
