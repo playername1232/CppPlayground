@@ -202,6 +202,7 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="ColorFolder\Color.cpp" />
     <ClCompile Include="File Operations\FileStream.cpp">
       <RuntimeLibrary>MultiThreadedDebugDll</RuntimeLibrary>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -504,6 +505,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AsyncTesting\AsyncTest.h" />
+    <ClInclude Include="ColorFolder\Color.h" />
     <ClInclude Include="File Operations\FileStream.h" />
     <ClInclude Include="Utilities\ArrayUtility\ArrayFunc.h" />
     <ClInclude Include="Utilities\ConversionsUtility\Conversions.h" />

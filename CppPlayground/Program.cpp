@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include "AsyncTesting/AsyncTest.h"
+#include "ColorFolder/Color.h"
 #include "File Operations/FileStream.h"
 #include "Utilities/ArrayUtility/ArrayFunc.h"
 #include "Utilities/ConversionsUtility/Conversions.h"
@@ -115,17 +116,8 @@ void TestFileWriteAndRead()
 
 int main()
 {
-    int num = 120;
-
-    char* str = Conversions::DecToBin<int>(num, 32); // size in bytes * 8 bits
-
-    cout << num << " in binary: " << str << '\n';
-
-    //cout << "beauty binary: " << Conversions::BeautyPrintBinary(str, 32) << '\n';
-
-    int numBack = Conversions::BinToDec(str, 32);
-
-    cout << "Binary: " << str << " = " << numBack << " in Dec";
-    
+    Color myColor(255, 120, 20);
+    char* inHex = myColor.GetHexCode();
+    cout << "Color in hex: " << inHex;
     return 0;
 }
