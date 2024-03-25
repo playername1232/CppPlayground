@@ -1,25 +1,42 @@
 #include "Conversions.h"
 #include "../CustomUtility.h"
+#include "../ArrayUtility/ArrayFunc.h"
 
-auto Conversions::BinToDec(char* entry, size_t bitSize) -> long
+char* Conversions::LongToString(long number)
 {
-    if (bitSize > 64)
+    DynamicStringLibrary res = "";
+
+    while(number != 0)
     {
-        std::cout << "Size of result in bits must not exceed 8 bytes!\n";
-        return 0L;
+        res += (number % 10) + '0';
+        number /= 10;
     }
     
-    long res = 0L;
-    for (size_t i = 0; i < bitSize; i++)
+    return reverse_str(res.GetContent());
+}
+
+UINT64 Conversions::BinToDec(char* entry, int bitSize)
+{
+    if(bitSize <= 0)
+        return 0;
+
+    UINT64 result = 0;
+        
+    for(int i = 0; i < bitSize || entry[i] != '\0'; i++)
     {
-        res += static_cast<long>((entry[i] - '0') * pow(2, (bitSize - 1) - i)); // -'0' char -> int
+        result += (entry[i] - '0') & 0x1;
     }
 
-    return res;
+    return result;
+}
+
+UINT64 Conversions::HexToDec(char* hex)
+{
+    return 0;
 }
 
 // Non-functional 2be finished!
-char* Conversions::BeautyPrintBinary(char* binary, size_t len)
+char* Conversions::BeautyPrintBinary(char* binary, int len)
 {
     if(str_contains(binary, ' '))
     {
@@ -28,7 +45,7 @@ char* Conversions::BeautyPrintBinary(char* binary, size_t len)
     }
     // len / 4 = Number of nibbles = (32bit / 4) = 8 nibbles (8 nibbles = 7 spaces between nibbles + 1 for null terminator)
 
-    const size_t resLen = len + (len / 4);
+    const int resLen = len + (len / 4);
     char* res = static_cast<char*>(allocate_heap_clean(resLen, 1));
     
     for (int i = len, idx = resLen - 1; i >= 0; i--, idx--)

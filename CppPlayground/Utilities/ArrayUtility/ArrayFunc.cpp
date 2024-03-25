@@ -1,9 +1,9 @@
 #include "ArrayFunc.h"
 
-void reverse_str(char* str)
+char* reverse_str(char* str)
 {
 	if (str[0] == '\0')
-		return;
+		return nullptr;
 
 	size_t allocSize = 500;
 	size_t idx = 0;
@@ -26,5 +26,5 @@ void reverse_str(char* str)
 		str[idx] = copy[(allocSize - 1) - idx];
 	}
 
-	free_heap(copy);
+	return copy;
 }

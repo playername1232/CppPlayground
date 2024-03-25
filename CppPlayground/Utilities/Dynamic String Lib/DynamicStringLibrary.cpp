@@ -245,6 +245,9 @@ DynamicStringLibrary::DynamicStringLibrary(const char* entry)
 {
 	this->content = nullptr;
 	this->contentSize = 0;
+
+	if(entry[0] == '\0')
+		return;
 	
 	int arrAlloc = DEFAULT_ALLOC_BLOCK_SIZE;
 	// len counter no condition necessary - to be remade using DEFAULT_ALLOC_BLOCK_SIZE
@@ -267,8 +270,19 @@ DynamicStringLibrary::DynamicStringLibrary(const char* entry)
 	this->content[contentSize - 1] = '\0';
 }
 
+/*DynamicStringLibrary::~DynamicStringLibrary()
+{
+	free_heap(this->content);
+}*/
+
 void DynamicStringLibrary::operator=(const char* entry)
 {
+	if(entry[0] == '\0')
+	{
+		this->content = nullptr;
+		this->contentSize = 0;
+	}
+	
 	if (this->content != nullptr)
 		free_heap(this->content);
 	this->contentSize = 0;
@@ -301,7 +315,14 @@ void DynamicStringLibrary::operator+=(const char* entry)
 		{
 			CheckForBufferOverflow(this->content, i, arrayAlloc);
 
-			this->content[i] = entry[i];
+			this->content[this->contentSize] = entry[i];
+			this->contentSize += 1;
+		}
+		
+		if (this->content[this->contentSize - 1] != '\0')
+		{
+			CheckForBufferOverflow(this->content, this->contentSize, arrayAlloc);
+			this->content[this->contentSize] = '\0';
 			this->contentSize += 1;
 		}
 
@@ -314,29 +335,33 @@ void DynamicStringLibrary::operator+=(const char* entry)
 	{
 		arrayAlloc += DEFAULT_ALLOC_BLOCK_SIZE;
 	}
-
-	if (this->content[this->contentSize - 1] != '\0')
-		this->contentSize += 1;
-
-	// Returns invalid string. To be debugged
-
-	for (int i = 0; entry[i] != '\0'; i++, this->contentSize++)
+	this->content = (char*)reallocate_heap_block(this->content, arrayAlloc, 1);
+	
+	for (size_t i = 0; entry[i] != '\0'; i++)
 	{
-		// Resize if overflow
-		CheckForBufferOverflow(this->content, this->contentSize, arrayAlloc);
+		CheckForBufferOverflow(this->content, i, arrayAlloc);
 
-		this->content[this->contentSize - 1] = entry[i];
+		this->content[contentSize - 1] = entry[i];
+		this->contentSize += 1;
+	}
+		
+	if (this->content[this->contentSize - 1] != '\0')
+	{
+		this->content[this->contentSize - 1] = '\0';
 	}
 
-	std::cout << content[7];
-	std::cout << content[8];
-	this->content[this->contentSize - 1] = '\0';
+ 	this->content = (char*)(reallocate_heap_block(this->content, this->contentSize, 1));
+}
 
-	// Realloc corrupts array
- 	this->content = static_cast<char*>(reallocate_heap_block(this->content, this->contentSize, 1));
-
-	std::cout << content[7] << '\n';
-	std::cout << content[8] << '\n';
+void DynamicStringLibrary::operator+=(const char entry)
+{
+	if(entry == '\0')
+		return;
+	
+	this->content = static_cast<char*>(reallocate_heap_block(this->content, this->contentSize + 1, 1));
+	this->content[contentSize - 1] = entry;
+	this->content[contentSize] = '\0';
+	this->contentSize += 1;
 }
 
 char* DynamicStringLibrary::operator*()

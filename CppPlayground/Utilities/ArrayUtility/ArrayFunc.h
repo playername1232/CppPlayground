@@ -5,7 +5,7 @@
 #include "../List Utility/List.h"
 #endif
 
-void reverse_str(char* str);
+char* reverse_str(char* str);
 
 template<class T>
 void reverse_array(T* arr, size_t count, size_t size)
