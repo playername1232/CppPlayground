@@ -72,7 +72,7 @@ public:
     static char* ReverseDynamicString(const char* str);
 
     DynamicStringLibrary(const char* entry);
-    //~DynamicStringLibrary() { free(this->content); }
+    //~DynamicStringLibrary();
 
     // For now until I find out what's wrong with operator* overload
     char* GetContent() const { return this->content; }
@@ -80,6 +80,7 @@ public:
 
     void operator=(const char* entry);
     void operator+=(const char* entry);
+    void operator+=(const char entry);
     char* operator*();
 
     template <class T>
