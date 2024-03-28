@@ -1,16 +1,23 @@
 ﻿#pragma once
+#include <cstdint>
 
 class Color
 {
 private:
-    int red;
-    int green;
-    int blue;
+    // 8 bit
+    uint8_t red;
+    // 8 bit
+    uint8_t green;
+    // 8 bit
+    uint8_t blue;
 public:
     Color();
-    Color(int red, int green, int blue);
+    Color(uint8_t red, uint8_t green, uint8_t blue);
     // 2b done
     Color(char* hexCode);
     
-    char* GetHexCode();
+    char* GetHexCode() const;
+    
+    // Returns color values in int array { red, green, blue }
+    int* GetColors() const;
 };
