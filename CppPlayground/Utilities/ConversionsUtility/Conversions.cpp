@@ -32,7 +32,35 @@ UINT64 Conversions::BinToDec(char* entry, int bitSize)
 
 UINT64 Conversions::HexToDec(char* hex)
 {
-    return 0;
+    UINT64 result = 0l;
+
+    char _cVal[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+    int _iVal[16] = { 0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x5, 0x7, 0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF };
+    
+    int len = 0;
+    // Get length first otherwise there's no way to tell position of the first character
+    for(;hex[len] != '\0'; len++) {}
+
+    if(len == 0)
+        return 0l;
+    
+    auto valOfHex = [_cVal, _iVal](char _c) -> int
+    {
+        for(int i = 0; i < 16; i++)
+        {
+            if(_cVal[i] == _c)
+                return _iVal[i];
+        }
+
+        return 0x0;
+    };
+    
+    for(int i = len - 1; i >= 0; i--)
+    {
+        result += valOfHex(hex[i]) << ((len - 1) - i) * 4;
+    }
+    
+    return result;
 }
 
 // Non-functional 2be finished!
