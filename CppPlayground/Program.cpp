@@ -6,6 +6,7 @@
 #include "Utilities/ConversionsUtility/Conversions.h"
 #include "Utilities/Dynamic String Lib/DynamicStringLibrary.h"
 #include "Utilities/MacroUtility/CustomMacros.h"
+#include "Utilities/CustomMemoryAllocation/IMemory.h"
 
 using namespace std;
 
@@ -116,8 +117,17 @@ void TestFileWriteAndRead()
 
 int main()
 {
-    Color myColor(255, 120, 20);
-    char* inHex = myColor.GetHexCode();
-    cout << "Color in hex: " << inHex;
+    int iArr[5] = { 0, 1, 2, 3, 4 };
+
+    IMemory<int> arr = *IMemory<int>::CreateMemoryBlock(iArr, 5);
+    arr[4] = 1;
+
+    bool isWithin = arr.IsMemoryWithinRange(arr.GetStart() + 1);
+
+    arr.ResizeMemory(6);
+    arr[5] = 4454;
+
+    cout << arr[5];
+
     return 0;
 }

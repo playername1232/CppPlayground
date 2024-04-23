@@ -507,6 +507,7 @@
     <ClInclude Include="AsyncTesting\AsyncTest.h" />
     <ClInclude Include="ColorFolder\Color.h" />
     <ClInclude Include="File Operations\FileStream.h" />
+    <ClInclude Include="Utilities\CustomMemoryAllocation\IMemory.h" />
     <ClInclude Include="Utilities\ArrayUtility\ArrayFunc.h" />
     <ClInclude Include="Utilities\ConversionsUtility\Conversions.h" />
     <ClInclude Include="Utilities\CustomUtility.h" />
