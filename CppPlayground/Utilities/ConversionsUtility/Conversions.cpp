@@ -57,7 +57,7 @@ UINT64 Conversions::HexToDec(char* hex)
     
     for(int i = len - 1; i >= 0; i--)
     {
-        result += valOfHex(hex[i]) << ((len - 1) - i) * 4;
+        result += (unsigned long long)valOfHex(hex[i]) << ((len - 1) - i) * 4;
     }
     
     return result;

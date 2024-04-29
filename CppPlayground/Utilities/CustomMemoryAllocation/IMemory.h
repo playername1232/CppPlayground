@@ -12,13 +12,32 @@ private:
 	size_t size = 0;
 	
 public:
-	IMemory(size_t size = 1)
+
+	void (*memoryAllocatedCallback)();
+	void (*memoryEditedCallback)();
+	void (*memoryFreedCallback)();
+
+	IMemory(size_t size = 1, void(*memAllocCallback)()  = nullptr,
+							 void (*memEditCallback)()  = nullptr,
+							 void (*memFreedCallback)()  = nullptr) 
+								: memoryAllocatedCallback(memAllocCallback),
+							      memoryEditedCallback(memEditCallback), 
+								  memoryFreedCallback(memFreedCallback)
 	{
 		check_size(size);
 
 		ptr = (T*)allocate_heap_clean(size, sizeof(T));
 		end = ptr + size;
 		this->size = size;
+
+		if (memoryAllocatedCallback != nullptr)
+			memoryAllocatedCallback();
+	}
+
+	~IMemory()
+	{
+		if (this->memoryFreedCallback != nullptr)
+			this->memoryFreedCallback();
 	}
 
 	/// <summary>
@@ -57,9 +76,15 @@ public:
 
 	void ResizeMemory(int newSize)
 	{
+		if (newSize == this->size)
+			return;
+
 		this->ptr = (T*)reallocate_heap_block(this->ptr, size, sizeof(T));
 		end = ptr + newSize;
 		this->size = newSize;
+
+		if (this->memoryEditedCallback != nullptr)
+			this->memoryEditedCallback();
 	}
 
 	T& operator[](size_t idx)
@@ -81,12 +106,15 @@ public:
 		return ptr[idx];
 	}
 
-	static IMemory* CreateMemoryBlock(T* ptr, size_t size)
+	static IMemory* CreateMemoryBlock(T* ptr, size_t size, 
+											  void (*memAllocCallback)() = nullptr,
+											  void (*memEditCallback)()  = nullptr,
+											  void (*memFreedCallback)() = nullptr)
 	{
 		check(ptr);
 		check_size(size);
 
-		IMemory* mem = new IMemory<T>(size);
+		IMemory* mem = new IMemory<T>(size, memAllocCallback, memEditCallback, memFreedCallback);
 
 		for (size_t i = 0; i < size; i++)
 		{
