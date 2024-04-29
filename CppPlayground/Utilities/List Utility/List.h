@@ -104,7 +104,7 @@ public:
 				}
 				catch (std::exception ex)
 				{
-					std::cout << "CallStack Message: " << ex.what();
+					std::cout << __FUNCTION__ << ": CallStack Message: " << ex.what();
 				}
 			}
 
@@ -120,7 +120,7 @@ public:
 				for (size_t idx = 0; idx < strSize; idx++)
 					pomStr[idx] = strBuffer[idx];
 
-				buffer[CollectionSize - 1] = _strdup(pomStr); // Tuto crashuje
+				buffer[CollectionSize - 1] = *(T*)_strdup(pomStr); // Tuto crashuje
 			}
 			else
 			{
@@ -131,7 +131,7 @@ public:
 				for (size_t idx = 0; idx < strSize; idx++)
 					pomStr[idx] = strBuffer[idx];
 
-				buffer[CollectionSize - 1] = (T)pomStr; // Tuto crashuje
+				buffer[CollectionSize - 1] = *(T*)pomStr; // Tuto crashuje
 			}
 		}
 		else
@@ -172,12 +172,12 @@ public:
 			{
 				size_t _sizePerElement = sizeof(T);
 
-				T* buffer = (T*)reallocate_heap_block(TCollection, CollectionSize * _sizePerElement);
+				T* buffer = (T*)reallocate_heap_block(TCollection, CollectionSize, _sizePerElement);
 
 				for (int j = i; j < CollectionSize - 1; j++)
 					buffer[j] = this->TCollection[j + 1];
 
-				buffer = (T*)reallocate_heap_block(TCollection, (CollectionSize - 1) * _sizePerElement);
+				buffer = (T*)reallocate_heap_block(TCollection, (CollectionSize - 1), _sizePerElement);
 
 				this->TCollection = buffer;
 

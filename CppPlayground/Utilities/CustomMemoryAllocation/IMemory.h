@@ -17,9 +17,9 @@ public:
 	void (*memoryEditedCallback)();
 	void (*memoryFreedCallback)();
 
-	IMemory(size_t size = 1, void(*memAllocCallback)()  = nullptr,
-							 void (*memEditCallback)()  = nullptr,
-							 void (*memFreedCallback)()  = nullptr) 
+	IMemory(size_t size = 1, void (*memAllocCallback)()  = nullptr,
+							 void (*memEditCallback)()   = nullptr,
+							 void (*memFreedCallback)()  = nullptr)
 								: memoryAllocatedCallback(memAllocCallback),
 							      memoryEditedCallback(memEditCallback), 
 								  memoryFreedCallback(memFreedCallback)
@@ -38,6 +38,79 @@ public:
 	{
 		if (this->memoryFreedCallback != nullptr)
 			this->memoryFreedCallback();
+	}
+
+	void ANDMemValue(T mask, size_t offset)
+	{
+		if (offset >= size)
+		{
+			std::ostringstream oss{};
+			oss << __FUNCTION__ << ": offset >= size : Offset is out of range! Offsetting " << offset << " in " << size << " sized array!";
+
+			throw std::out_of_range(oss.str());
+		}
+
+		this[offset] &= mask;
+	}
+	void NANDMemValue(T mask, size_t offset)
+	{
+		if (offset >= size)
+		{
+			std::ostringstream oss{};
+			oss << __FUNCTION__ << ": offset >= size : Offset is out of range! Offsetting " << offset << " in " << size << " sized array!";
+
+			throw std::out_of_range(oss.str());
+		}
+
+		this[offset] &= ~mask;
+	}
+	void ORMemValue(T mask, size_t offset)
+	{
+		if (offset >= size)
+		{
+			std::ostringstream oss{};
+			oss << __FUNCTION__ << ": offset >= size : Offset is out of range! Offsetting " << offset << " in " << size << " sized array!";
+
+			throw std::out_of_range(oss.str());
+		}
+		
+		this[offset] |= mask;
+	}
+	void NORMemValue(T mask, size_t offset)
+	{
+		if (offset >= size)
+		{
+			std::ostringstream oss{};
+			oss << __FUNCTION__ << ": offset >= size : Offset is out of range! Offsetting " << offset << " in " << size << " sized array!";
+
+			throw std::out_of_range(oss.str());
+		}
+
+		this[offset] |= ~mask;
+	}
+	void XORMemValue(T mask, size_t offset)
+	{
+		if (offset >= size)
+		{
+			std::ostringstream oss{};
+			oss << __FUNCTION__ << ": offset >= size : Offset is out of range! Offsetting " << offset << " in " << size << " sized array!";
+
+			throw std::out_of_range(oss.str());
+		}
+
+		this[offset] ^= mask;
+	}
+	void XNORMemValue(T mask, size_t offset)
+	{
+		if (offset >= size)
+		{
+			std::ostringstream oss{};
+			oss << __FUNCTION__ << ": offset >= size : Offset is out of range! Offsetting " << offset << " in " << size << " sized array!";
+
+			throw std::out_of_range(oss.str());
+		}
+
+		this[offset] ^= ~mask;
 	}
 
 	/// <summary>
