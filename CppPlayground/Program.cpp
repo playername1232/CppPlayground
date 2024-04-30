@@ -115,19 +115,42 @@ void TestFileWriteAndRead()
     cout << strArr[0] << '\n' << strArr[1] << '\n';
 }
 
-int main()
+
+void NewMemoryCallbackHandle()
 {
-    int iArr[5] = { 0, 1, 2, 3, 4 };
+    cout << "New memory block allocated" << endl;
+}
 
-    IMemory<int> arr = *IMemory<int>::CreateMemoryBlock(iArr, 5);
-    arr[4] = 1;
+void MemoryEditedHandle()
+{
+    cout << "Memory block edited" << endl;
+}
 
-    bool isWithin = arr.IsMemoryWithinRange(arr.GetStart() + 1);
+void MemoryFreedHandle()
+{
+    cout << "Memory freed!" << endl;
+}
 
-    arr.ResizeMemory(6);
-    arr[5] = 4454;
+void TestIMemory()
+{
+    IMemory<string> mem = IMemory<string>(10, &NewMemoryCallbackHandle, 
+                                              &MemoryEditedHandle, 
+                                              &MemoryFreedHandle);
 
-    cout << arr[5];
+    for (int i = 0; i < mem.GetMemorySize(); i++)
+{
+        std::ostringstream oss{};
+        oss << "mem[" << i << "]";
+        mem[i] = oss.str();
+    }
+
+    cout << "mem[5] before change: " << mem[5] << endl;
+
+    mem[5] = "mem[455]";
+
+    cout << "mem[5] after change: " << mem[5] << endl;
+
+}
 
     return 0;
 }

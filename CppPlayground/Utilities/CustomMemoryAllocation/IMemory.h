@@ -10,13 +10,12 @@ private:
 	T* end = nullptr;
 
 	size_t size = 0;
-	
-public:
 
 	void (*memoryAllocatedCallback)();
 	void (*memoryEditedCallback)();
 	void (*memoryFreedCallback)();
-
+	
+public:
 	IMemory(size_t size = 1, void (*memAllocCallback)()  = nullptr,
 							 void (*memEditCallback)()   = nullptr,
 							 void (*memFreedCallback)()  = nullptr)
@@ -38,6 +37,41 @@ public:
 	{
 		if (this->memoryFreedCallback != nullptr)
 			this->memoryFreedCallback();
+	}
+
+	/// <summary>
+	/// Retrieves a pointer to first item stored in the memory block
+	/// </summary>
+	/// <returns>Return pointer to first stored item in the memory block</returns>
+	T* GetStart()
+	{
+		return ptr;
+	}
+
+	/// <summary>
+	/// Retrieves a pointer to either the last item in the allocated memory pool or the first memory block outside of the allocated heap block.
+	/// </summary>
+	/// <param name="lastItem">Determiners whether to get pointer to last item in memory or get pointer to first memory block outside of the allocated heap block</param>
+	/// <returns>Returns either pointer to last item in the pool or the first memory block outside of the allocated heap block</returns>
+	T* GetEndOfHeap(bool lastItem = false)
+	{
+		if (lastItem)
+		{
+			// Return pointer to the last item in the memory pool
+			return end - 1;
+		}
+		// Return pointer to the first memory block outside oof of the memory pool
+		return end;
+	}
+
+	size_t GetMemorySize()
+	{
+		return this->size;
+	}
+
+	size_t GetMemoryByteSize()
+	{
+		return this->size * sizeof(T);
 	}
 
 	void ANDMemValue(T mask, size_t offset)
@@ -111,31 +145,6 @@ public:
 		}
 
 		this[offset] ^= ~mask;
-	}
-
-	/// <summary>
-	/// Retrieves a pointer to first item stored in the memory block
-	/// </summary>
-	/// <returns>Return pointer to first stored item in the memory block</returns>
-	T* GetStart()
-	{
-		return ptr;
-	}
-
-	/// <summary>
-	/// Retrieves a pointer to either the last item in the allocated memory pool or the first memory block outside of the allocated heap block.
-	/// </summary>
-	/// <param name="lastItem">Determiners whether to get pointer to last item in memory or get pointer to first memory block outside of the allocated heap block</param>
-	/// <returns>Returns either pointer to last item in the pool or the first memory block outside of the allocated heap block</returns>
-	T* GetEndOfHeap(bool lastItem = false)
-	{
-		if (lastItem)
-		{
-			// Return pointer to the last item in the memory pool
-			return end - 1;
-		}
-		// Return pointer to the first memory block outside oof of the memory pool
-		return end;
 	}
 
 	bool IsMemoryWithinRange(T* searchPtr)
