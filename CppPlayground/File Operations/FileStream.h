@@ -1,5 +1,9 @@
 #pragma once
-enum FileStatus : uint8_t
+#include <cstdio>
+#include <cstring>
+#include "../Utilities/MacroUtility/CustomMacros.h"
+
+enum FileStatus : int
 {
 	Closed = 0,
 	Opened = 1
@@ -9,9 +13,8 @@ class FileStream
 {
 private:
 	char* filePath = nullptr;
-	FILE* filePtr = nullptr;
+	FILE* filePtr  = nullptr;
 	FileStatus fileStatus = FileStatus::Closed;
-
 
 public:
 
@@ -24,7 +27,7 @@ public:
 	FileStream(char*& filePath)
 	{
 		this->filePath = (char*)allocate_heap_clean(strlen(filePath), 1);
-		strcpy(this->filePath, filePath);
+		strcpy_s(this->filePath, strlen(filePath), filePath);
 	}
 
 	bool OpenFile(const char* openMode);

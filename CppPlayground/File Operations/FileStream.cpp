@@ -119,7 +119,8 @@ char** FileStream::ReadAllLines(const char* filePath)
 
 void FileStream::WriteAllText(const char* filePath, const char* text)
 {
-    FILE* fPtr = fopen(filePath, "w");
+    FILE* fPtr;
+    fopen_s(&fPtr, filePath, "w");
 
     if (fPtr == nullptr)
     {
@@ -137,7 +138,8 @@ void FileStream::WriteAllLines(const char* filePath, const char** content, size_
 {
     size_t buffIdx = 0;
 
-    FILE* file = fopen(filePath, "w");
+    FILE* file;
+    fopen_s(&file, filePath, "w");
 
     if (file == nullptr)
         return;
@@ -172,7 +174,7 @@ bool FileStream::OpenFile(const char* openMode)
 {
     if (fileStatus == FileStatus::Closed)
     {
-        filePtr = fopen(this->filePath, openMode);
+        fopen_s(&this->filePtr, this->filePath, openMode);
 
         bool opened = filePtr != nullptr;
 
@@ -185,7 +187,7 @@ bool FileStream::OpenFile(const char* openMode)
 
 bool FileStream::CloseFile()
 {
-    if (fileStatus == FileStatus::Closed || this->filePtr != nullptr)
+    if (fileStatus == FileStatus::Closed || this->filePtr == nullptr)
     {
         fileStatus = FileStatus::Closed;
         return false;

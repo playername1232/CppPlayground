@@ -151,6 +151,18 @@ void TestIMemory()
     cout << "mem[5] after change: " << mem[5] << endl;
 
 }
+void main()
+{
+    char* mem = (char*)TestingAllocFunction(50);
 
-    return 0;
+    TestingReallocFunction(mem, 4);
+
+    for (int i = 0; i < 50; i++)
+    {
+        mem[i] = 'C';
+
+        cout << "mem[" << i << "] = " << mem[i];
+    }
+
+    int xd = 25;
 }

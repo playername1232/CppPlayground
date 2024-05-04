@@ -53,7 +53,8 @@ auto remove_constant(const T* ptr)
 	T* value = &*ptr;
 }
 
-void* TestingAllocFunction(void* block);
+void* TestingAllocFunction(size_t size);
+void TestingReallocFunction(void* block, size_t size);
 void  free_heap(void* _block);
 void* allocate_heap(size_t _count, size_t _size);
 void* allocate_heap_clean(size_t _count, size_t _size);

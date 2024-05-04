@@ -2,11 +2,21 @@
 #include <iostream>
 #include <sstream>
 
-void* TestingAllocFunction(void* block)
+void* TestingAllocFunction(size_t size)
 {
 	// https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc
-	return VirtualAlloc(NULL, 10, MEM_COMMIT, 20); // Example
-	//VirtualAlloc()
+	return VirtualAlloc(NULL, size, MEM_COMMIT, PAGE_READWRITE);
+}
+
+void TestingReallocFunction(void* block, size_t size)
+{
+	VirtualAlloc(block, size, MEM_COMMIT, PAGE_READWRITE);
+}
+
+// TODO: Try to get rid of size
+VOID TestingFreeFunction(void* block, size_t size)
+{
+	VirtualFree(block, size, MEM_RELEASE);
 }
 
 void free_heap(void* _block)
