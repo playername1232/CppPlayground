@@ -2,6 +2,7 @@
 #include "../Utilities/MacroUtility/CustomMacros.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 char* FileStream::ReadAllText(const char* filePath)
 {
@@ -118,52 +119,25 @@ char** FileStream::ReadAllLines(const char* filePath)
 
 void FileStream::WriteAllText(const char* filePath, const char* text)
 {
+    FILE* fPtr = fopen(filePath, "w");
 
-}
-
-/// <summary>
-/// Finds character in string
-/// </summary>
-/// <param name="content">String entry</param>
-/// <param name="_char">Character to find</param>
-/// <returns>Index of first character occurence OR -1 if character doesn't exist in given string</returns>
-int GetIndexOf(char* content, char _c)
-{
-    for (int i = 0; content[i] != '\0'; i++)
+    if (fPtr == nullptr)
     {
-        if (content[i] == _c)
-            return i;
-    }
-    return -1;
-}
+        std::ostringstream oss{};
+        oss << __FUNCTION__ << ": Opening file " << filePath << "failed!";
 
-/// <summary>
-/// Replaces character in 
-/// </summary>
-/// <param name="content">String Entry</param>
-/// <param name="_c">Original character</param>
-/// <param name="_r">Replacement character</param>
-/// <returns></returns>
-int CharReplace(char* content, char _c, char _r)
-{
-    int ret = -1;
-    for (int i = 0; content[i] != '\0'; i++)
-    {
-        if (content[i] == _c)
-        {
-            ret = 0;
-            content[i] = _r;
-        }
+        throw std::runtime_error(oss.str());
     }
-    return ret;
+
+    fwrite(text, 1, strlen(text), fPtr);
+    fclose(fPtr);
 }
 
 void FileStream::WriteAllLines(const char* filePath, const char** content, size_t n_lines)
 {
     size_t buffIdx = 0;
 
-    FILE* file;
-    fopen_s(&file, filePath, "w");
+    FILE* file = fopen(filePath, "w");
 
     if (file == nullptr)
         return;
@@ -192,4 +166,35 @@ void FileStream::WriteAllLines(const char* filePath, const char** content, size_
 
     fclose(file);
     free(stringBuilder);
+}
+
+bool FileStream::OpenFile(const char* openMode)
+{
+    if (fileStatus == FileStatus::Closed)
+    {
+        filePtr = fopen(this->filePath, openMode);
+
+        bool opened = filePtr != nullptr;
+
+        fileStatus = opened ? FileStatus::Opened : FileStatus::Closed;
+        return opened;
+    }
+
+    return false;
+}
+
+bool FileStream::CloseFile()
+{
+    if (fileStatus == FileStatus::Closed || this->filePtr != nullptr)
+    {
+        fileStatus = FileStatus::Closed;
+        return false;
+    }
+
+    fclose(this->filePtr);
+    // Unbind ptr to an opened file
+    this->filePtr = nullptr;
+
+    fileStatus = FileStatus::Closed;
+    return true;
 }
