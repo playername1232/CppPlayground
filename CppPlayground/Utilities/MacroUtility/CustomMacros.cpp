@@ -2,10 +2,10 @@
 #include <iostream>
 #include <sstream>
 
-void* TestingAllocFunction(size_t size)
+void* TestingAllocFunction(long long size)
 {
 	// https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc
-	return VirtualAlloc(NULL, size, MEM_COMMIT, PAGE_READWRITE);
+	return VirtualAlloc(NULL, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 }
 
 void TestingReallocFunction(void* block, size_t size)
@@ -14,9 +14,9 @@ void TestingReallocFunction(void* block, size_t size)
 }
 
 // TODO: Try to get rid of size
-VOID TestingFreeFunction(void* block, size_t size)
+VOID TestingFreeFunction(void* block)
 {
-	VirtualFree(block, size, MEM_RELEASE);
+	VirtualFree(block, 0, MEM_RELEASE);
 }
 
 void free_heap(void* _block)

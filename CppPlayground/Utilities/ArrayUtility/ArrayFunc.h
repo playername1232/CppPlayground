@@ -2,6 +2,7 @@
 
 #ifndef ARRFUNCDEFINE
 #include "../MacroUtility/CustomMacros.h"
+#include "../CustomUtility.h"
 #include "../List Utility/List.h"
 #endif
 

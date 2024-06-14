@@ -2,28 +2,25 @@
 
 char* reverse_str(char* str)
 {
-	if (str[0] == '\0')
+	if (str[0] == '\0' || strlen(str) == 0)
 		return nullptr;
 
-	size_t allocSize = 500;
-	size_t idx = 0;
-
-	char* copy = (char*)allocate_heap_clean(allocSize, 1);
-
-	for (; str[idx] != '\0'; idx++)
+	size_t size = strlen(str);
+	char* copy = (char*)allocate_heap_clean(size, 1);;
+	
+	int iterateStart = str[size - 1] == '\0' ? size - 2 : size - 1;
+	
+	for(int write = 0, i = iterateStart; i >= 0 ; write++, i--)
 	{
-		if (idx == allocSize - 1)
-		{
-			copy = (char*)reallocate_heap_block(copy, allocSize += 500, 1);
-		}
-		copy[idx] = str[idx];
+		copy[write] = str[i];
 	}
-	// reuse allocSize as last Idx storage;
-	allocSize = idx;
-
-	for (idx = 0; idx < allocSize; idx++)
+	if(copy[size - 1] != '\0')
 	{
-		str[idx] = copy[(allocSize - 1) - idx];
+		char* buffer = (char*)reallocate_heap_block(copy, size + 1, 1);
+		check(buffer);
+
+		buffer[size] = '\0';
+		copy = buffer;
 	}
 
 	return copy;

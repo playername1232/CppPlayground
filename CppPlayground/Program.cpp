@@ -2,10 +2,12 @@
 #include "AsyncTesting/AsyncTest.h"
 #include "ColorFolder/Color.h"
 #include "File Operations/FileStream.h"
+#include "Utilities/CustomUtility.h"
 #include "Utilities/ArrayUtility/ArrayFunc.h"
 #include "Utilities/ConversionsUtility/Conversions.h"
 #include "Utilities/Dynamic String Lib/DynamicStringLibrary.h"
 #include "Utilities/MacroUtility/CustomMacros.h"
+#include "Utilities/List Utility/List.h"
 #include "Utilities/CustomMemoryAllocation/IMemory.h"
 
 using namespace std;
@@ -151,18 +153,20 @@ void TestIMemory()
     cout << "mem[5] after change: " << mem[5] << endl;
 
 }
-void main()
+int main()
 {
-    char* mem = (char*)TestingAllocFunction(50);
+    char letter = 'A';
+    char converted = asciiToLower(letter);
+    
+    cout << "Original letter: " << letter << " Converted letter: " << converted << "\n\n";
 
-    TestingReallocFunction(mem, 4);
+    char str[11] = "0123456789";
+    char* copy = nullptr;
+    strcpy_c(copy, str);
 
-    for (int i = 0; i < 50; i++)
-    {
-        mem[i] = 'C';
+    cout << "Copy of the string is = " << copy << "\n";
 
-        cout << "mem[" << i << "] = " << mem[i];
-    }
-
-    int xd = 25;
+    cout << "Reversed string = " << reverse_str(copy) << "\n";
+    
+    return 0;
 }

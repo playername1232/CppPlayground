@@ -21,7 +21,9 @@ static void CheckForBufferOverflow(char*& arr, size_t index, int& bufferAllocSiz
 	if (index > (bufferAllocSize - 1)) // Index 9 = length 10 therefore max allocated size is 10
 	{
 		bufferAllocSize += DEFAULT_ALLOC_BLOCK_SIZE;
-		arr = (char*)reallocate_heap_block(arr, bufferAllocSize, 1);
+		char* buffer = (char*)reallocate_heap_block(arr, bufferAllocSize, 1);
+		check(buffer);
+		arr = buffer;
 	}
 }
 

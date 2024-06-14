@@ -27,7 +27,7 @@ public:
     static UINT64 BinToDec(char* entry, const int bitSize);
 
     /// \brief 
-    /// \tparam T 
+    /// \tparam T item data type
     /// \param item item to convert
     /// \param bitSize amount of bits to convert into hex (if not divisible by 4, the missing amount is added)
     /// \return Returns item represented in hex

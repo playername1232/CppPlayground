@@ -10,6 +10,7 @@ private:
 	T* end = nullptr;
 
 	size_t size = 0;
+	size_t bitSize = 0;
 
 	void (*memoryAllocatedCallback)();
 	void (*memoryEditedCallback)();
@@ -28,6 +29,7 @@ public:
 		ptr = (T*)allocate_heap_clean(size, sizeof(T));
 		end = ptr + size;
 		this->size = size;
+		this->bitSize = sizeof(T) * 8;
 
 		if (memoryAllocatedCallback != nullptr)
 			memoryAllocatedCallback();
@@ -64,15 +66,12 @@ public:
 		return end;
 	}
 
-	size_t GetMemorySize()
-	{
-		return this->size;
-	}
+	size_t GetMemorySize()			{ return this->size; }
 
-	size_t GetMemoryByteSize()
-	{
-		return this->size * sizeof(T);
-	}
+	size_t GetMemoryElementBitSize()	{ return this->bitSize; }
+
+	size_t GetMemoryByteSize()		{ return this->size * sizeof(T); }
+
 
 	void ANDMemValue(T mask, size_t offset)
 	{
@@ -186,6 +185,37 @@ public:
 			}
 		}
 		return ptr[idx];
+	}
+
+	
+	/**
+	 * @tparam _To New data type
+	 * @param src IMemory type Source
+	 * @param memAllocCallback Pointer to Callback function called when: New Memory allocation / reallocation occurs
+	 * @param memEditCallback Pointer to Callback function called when: Memory is edited
+	 * @param memFreedCallback Pointer to Callback function called when: Memory is freed 
+	 * @return Pointer to new Memory object 
+	 */
+	template<typename _To>
+	static IMemory* CopyTo(IMemory<T>* src, 
+							void (*memAllocCallback)() = nullptr,
+							void (*memEditCallback)() = nullptr,
+							void (*memFreedCallback)() = nullptr)
+	{
+		IMemory<_To> mem = IMemory<_To>(src->size);
+
+		for (int i = 0; i < src->size; i++)
+		{
+			mem[i] = 0x0;
+
+			size_t _cpyBits = mem->bitSize > src->bitSize ? src->bitSize : mem->bitSize;
+			for (int j = 0; j < _cpyBits; j++)
+			{
+				mem[i] |= (src[i] >> j) & 1;
+			}
+		}
+
+		return mem;
 	}
 
 	static IMemory* CreateMemoryBlock(T* ptr, size_t size, 

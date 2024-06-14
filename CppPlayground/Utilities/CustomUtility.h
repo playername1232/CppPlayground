@@ -10,7 +10,6 @@ inline bool str_contains(char* _s, char _c)
     return  false;
 }
 
-
 /// <summary>
 /// Finds character in string
 /// </summary>
@@ -47,3 +46,16 @@ inline int CharReplace(char* content, char _c, char _r)
     }
     return ret;
 }
+
+/// Copies string from source to destination
+/// @param dest Destination
+/// @param src Source
+void strcpy_c(char*& dest, const char* src);
+
+/// ASCII character To upper convertor
+/// @return Upper case letter
+char asciiToUpper(char _c);
+
+/// ASCII character to lower convertor
+/// @return Lower case letter
+char asciiToLower(char _c);
