@@ -35,7 +35,7 @@ char asciiToUpper(char _c)
     if(_c >= 'a' && 'z' >= _c)
         return _c - 32;
 
-    return 0x0;
+    return _c;
 }
 
 char asciiToLower(char _c)
@@ -43,5 +43,5 @@ char asciiToLower(char _c)
     if(_c >= 'A' && 'Z' >= _c)
         return _c + 32;
 
-    return 0x0;
+    return _c;
 }

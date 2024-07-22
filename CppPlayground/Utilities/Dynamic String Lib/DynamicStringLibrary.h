@@ -23,9 +23,8 @@ public:
     /// </summary>
     /// <param name="str">String entry</param>
     /// <param name="concate">String to connect</param>
-    /// <param name="splitter">Character put between strings to split</param>
     /// <returns>Dynamically created Memory pointer of two joined string</returns>
-    static char* ConcatenateDynamicString(const char* str, const char* concate, const char splitter = NULL);
+    static char* ConcatenateDynamicString(const char* str, const char* concate);
 
     /// <summary>
     /// Frees Memory Pointer
@@ -69,7 +68,7 @@ public:
     /// </summary>
     /// <param name="str">String to reverse</param>
     /// <returns>Dynamically created Memory pointer to reveresed string</returns>
-    static char* ReverseDynamicString(const char* str);
+    static char* ReverseDynamicString(char* str);
 
     DynamicStringLibrary(const char* entry);
     //~DynamicStringLibrary();
