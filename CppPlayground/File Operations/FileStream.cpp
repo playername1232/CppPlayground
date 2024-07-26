@@ -170,6 +170,14 @@ void FileStream::WriteAllLines(const char* filePath, const char** content, size_
     free(stringBuilder);
 }
 
+FileStream::~FileStream()
+{
+    if(this->fileStatus == FileStatus::Opened)
+        fclose(this->filePtr);
+
+    free(filePath);
+}
+
 bool FileStream::OpenFile(const char* openMode)
 {
     if (fileStatus == FileStatus::Closed)

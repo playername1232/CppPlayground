@@ -30,6 +30,8 @@ public:
 		strcpy_s(this->filePath, strlen(filePath), filePath);
 	}
 
+	~FileStream();
+
 	bool OpenFile(const char* openMode);
 	bool CloseFile();
 };
