@@ -3,6 +3,9 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <vector>
+
+#include "../Utilities/CustomUtility.h"
 
 char* FileStream::ReadAllText(const char* filePath)
 {
@@ -170,6 +173,19 @@ void FileStream::WriteAllLines(const char* filePath, const char** content, size_
     free(stringBuilder);
 }
 
+FileStream::FileStream(char*& filePath)
+{
+    this->filePath = (char*)allocate_heap_clean(strlen(filePath), 1);
+    strcpy_c(this->filePath, filePath);
+}
+
+FileStream::FileStream(std::string filePath)
+{
+    this->filePath = (char*)allocate_heap_clean(strlen(filePath.c_str()), 1);
+    const char* cStr = filePath.c_str();
+    strcpy_c(this->filePath, cStr);
+}
+
 FileStream::~FileStream()
 {
     if(this->fileStatus == FileStatus::Opened)
@@ -178,11 +194,14 @@ FileStream::~FileStream()
     free(filePath);
 }
 
-bool FileStream::OpenFile(const char* openMode)
+bool FileStream::OpenFile(FileOpenMode openMode)
 {
+    std::vector<const char*> _vec = { "r", "w", "a", "r+", "w+", "a+" };
+    const char* mode = _vec[static_cast<int>(openMode)];
+    
     if (fileStatus == FileStatus::Closed)
     {
-        fopen_s(&this->filePtr, this->filePath, openMode);
+        fopen_s(&this->filePtr, this->filePath, mode);
 
         bool opened = filePtr != nullptr;
 
