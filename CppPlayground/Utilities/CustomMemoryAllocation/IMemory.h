@@ -24,7 +24,8 @@ public:
 							      memoryEditedCallback(memEditCallback), 
 								  memoryFreedCallback(memFreedCallback)
 	{
-		check_size(size);
+		if(size == 0)
+			return;
 
 		ptr = (T*)allocate_heap_clean(size, sizeof(T));
 		end = ptr + size;
@@ -37,6 +38,7 @@ public:
 
 	~IMemory()
 	{
+		free_heap(ptr);
 		if (this->memoryFreedCallback != nullptr)
 			this->memoryFreedCallback();
 	}
@@ -181,7 +183,7 @@ public:
 			}
 			catch (std::exception& e)
 			{
-				std::cerr << "Exception: " << e.what() << std::endl;
+				std::cerr << "Exception: " << e.what() << '\n';
 			}
 		}
 		return ptr[idx];
@@ -196,19 +198,21 @@ public:
 	 * @param memFreedCallback Pointer to Callback function called when: Memory is freed 
 	 * @return Pointer to new Memory object 
 	 */
-	template<typename _To>
-	static IMemory* CopyTo(IMemory<T>* src, 
+	template<typename _From>
+	static IMemory* CopyTo(IMemory<_From>* src, 
 							void (*memAllocCallback)() = nullptr,
 							void (*memEditCallback)() = nullptr,
 							void (*memFreedCallback)() = nullptr)
 	{
-		IMemory<_To> mem = IMemory<_To>(src->size);
+		IMemory<T>* mem = new IMemory<T>(src->GetMemorySize());
 
-		for (int i = 0; i < src->size; i++)
+		for (int i = 0; i < src->GetMemorySize(); i++)
 		{
 			mem[i] = 0x0;
 
-			size_t _cpyBits = mem->bitSize > src->bitSize ? src->bitSize : mem->bitSize;
+			int srcBitSize = (src->GetMemoryByteSize() * 8);
+			
+			size_t _cpyBits = mem->bitSize > srcBitSize ? srcBitSize : mem->bitSize;
 			for (int j = 0; j < _cpyBits; j++)
 			{
 				mem[i] |= (src[i] >> j) & 1;
