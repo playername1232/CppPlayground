@@ -59,3 +59,6 @@ char asciiToUpper(char _c);
 /// ASCII character to lower convertor
 /// @return Lower case letter
 char asciiToLower(char _c);
+
+int abs_val(int val);
+int negative_val(int val);

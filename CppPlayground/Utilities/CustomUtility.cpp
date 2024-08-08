@@ -45,3 +45,27 @@ char asciiToLower(char _c)
 
     return _c;
 }
+
+int abs_val(int val)
+{
+    if(val >= 0)
+        return val;
+    if(val == INT_MIN)
+        return INT_MAX;
+    
+    val = ~val;
+    val += 1;
+    return val;
+}
+
+int negative_val(int val)
+{
+    if(val <= 0)
+        return val;
+    if(val == INT_MAX)
+        return INT_MIN;
+
+    val = ~val;
+    val += 1;
+    return val;
+}
