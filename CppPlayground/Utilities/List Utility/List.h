@@ -2,7 +2,7 @@
 #ifndef MALLOCDEF
 #include <malloc.h>
 #include "../MacroUtility/CustomMacros.h"
-#endif // !LISTDEF
+#endif
 
 #ifndef STREAMDEF
 #include <iostream>
@@ -10,213 +10,156 @@
 #endif
 
 template<typename T>
+struct ListNode
+{
+	T _val;
+	ListNode* next;
+
+	ListNode() : _val(0), next(nullptr) {}
+	ListNode(T _val) : _val(_val), next(nullptr) {}
+	ListNode(T _val, ListNode* next) : _val(_val), next(next) {}
+};
+
+template<typename T>
 class List
 {
+	
 private:
-	T* TCollection;
+	ListNode<T>* head;
+	ListNode<T>* tail;
+	
 	size_t CollectionSize;
 
 public:
-	List()
-	{
-		TCollection = nullptr;
-		CollectionSize = 0;
-	}
+	List() : head(nullptr), tail(nullptr), CollectionSize(0) {}
 	
 	List(T* tArray, size_t arrSize)
 	{
-		if (CollectionSize != 0)
-			free(TCollection);
-
-		TCollection = (T*)allocate_heap_clean(arrSize, sizeof(T));
-
-		CollectionSize = arrSize;
-
-		for (int i = 0; i < CollectionSize; i++)
+		if(arrSize == 0)
 		{
-			TCollection[i] = tArray[i];
+			this->head = nullptr;
+			this->tail = nullptr;
 		}
+
+		this->head = new ListNode(tArray[0]);
+		this->tail = head;
+
+		ListNode<T>* prev = tail;
+
+		for(int i = 1; i < arrSize; i++)
+		{
+			tail->next = new ListNode<T>(tArray[i]);
+			prev = tail;
+			tail = tail->next;
+		}
+
+		this->CollectionSize = arrSize;
 	}
 
-	static char* ListToCharArray(List<char> _cList)
+	List(const List<T>& other) : head(nullptr), tail(nullptr), CollectionSize(0)
 	{
-		size_t listLen = _cList.GetCount();
-		// +1 for null terminator
-		char* ret = (char*)allocate_heap_clean(listLen + 1, 1);
-
-		for (size_t size = 0; size < listLen; size++)
-		{
-			ret[size] = _cList[size];
-		}
-
-		ret[listLen + 1] = '\0';
-
-		return ret;
-	}
-
-	/// <summary>
-	/// String currently non-functional!
-	/// </summary>
-	/// <param name="item"></param>
-	void Add(T item)
-	{
-		T* buffer = nullptr;
-		this->CollectionSize += 1;
-
-		size_t _sizePerElement = sizeof(T);
-
-		bool isString = false;
-		int  isCharArr = false;
-
-		if (std::is_same<T, std::string>::value)
-		{
-			_sizePerElement = 1;
-			isString = true;
-		}
-		if (std::is_same<T, char*>::value)
-		{
-			_sizePerElement = 1;
-			isCharArr = true;
-		}
-
-		// String not working! To be remade!
-		if (isString || isCharArr)
-		{
-			std::ostringstream oss {};
-			oss << item;
-
-			std::string pom = oss.str();
-			char* strBuffer = _strdup(pom.c_str());
-
-			check(strBuffer);
-
-			size_t strSize = strlen(strBuffer);
-
-			if (strBuffer[strSize - 1] != '\0')
-			{
-				try
-				{
-					char* pomStrBuffer = (char*)reallocate_heap_block(strBuffer, strSize, 1);
-
-					strBuffer = pomStrBuffer;
-					strBuffer[strSize] = '\0';
-					strSize += 1;
-				}
-				catch (std::exception ex)
-				{
-					std::cout << __FUNCTION__ << ": CallStack Message: " << ex.what();
-				}
-			}
-
-			if (CollectionSize == 1)
-			{
-				if (this->TCollection != nullptr)
-					free(this->TCollection);
-
-				buffer = (T*)allocate_heap_clean(1, sizeof(char*));
-
-				char* pomStr = (char*)allocate_heap_clean(strSize, 1);
-
-				for (size_t idx = 0; idx < strSize; idx++)
-					pomStr[idx] = strBuffer[idx];
-
-				buffer[CollectionSize - 1] = *(T*)_strdup(pomStr); // Tuto crashuje
-			}
-			else
-			{
-				buffer = (T*)reallocate_heap_block(this->TCollection, (this->CollectionSize + 1), sizeof(T*));
-
-				char* pomStr = (char*)allocate_heap_clean(strSize, 1);
-
-				for (size_t idx = 0; idx < strSize; idx++)
-					pomStr[idx] = strBuffer[idx];
-
-				buffer[CollectionSize - 1] = *(T*)pomStr; // Tuto crashuje
-			}
-		}
-		else
-		{
-			if (CollectionSize == 1)
-				buffer = (T*)allocate_heap_clean(1, sizeof(T));
-			else
-				buffer = (T*)reallocate_heap_block(this->TCollection, this->CollectionSize, sizeof(T));
-
-
-			if (buffer == nullptr)
-				throw std::exception("List.h has thrown an exception: failed to allocate buffer!");
-
-			buffer[CollectionSize - 1] = item;
-		}
-
-		this->TCollection = buffer;
-	}
-
-	void AddToEnd(T item)
-	{
-		// Hack solution. Reusing Add(T item) function for less repetive lines in the code
-		this->Add(item);
-
-		for (size_t i = this->CollectionSize - 1; i > 0; i--)
-		{
-			this->TCollection[i] = this->TCollection[i - 1];
-		}
-
-		this->TCollection[0] = item;
-	}
-
-	void Remove(T item)
-	{
-		for (int i = 0; i < CollectionSize; i++)
-		{
-			if (this->TCollection[i] == item)
-			{
-				size_t _sizePerElement = sizeof(T);
-
-				T* buffer = (T*)reallocate_heap_block(TCollection, CollectionSize, _sizePerElement);
-
-				for (int j = i; j < CollectionSize - 1; j++)
-					buffer[j] = this->TCollection[j + 1];
-
-				buffer = (T*)reallocate_heap_block(TCollection, (CollectionSize - 1), _sizePerElement);
-
-				this->TCollection = buffer;
-
-				return;
-			}
-		}
-	}
-
-	void Clear()
-	{
-		free_heap(this->TCollection);
+		if(other.CollectionSize == 0)
+			return;
 		
-		this->CollectionSize = 0;
-	}
+		this->head = new ListNode<T>(other.head->_val);
+		this->tail = head;
 
-	static void Move(List<T>& outList, T* arr, size_t len)
-	{
-		if (outList.TCollection != nullptr)
-			free_heap(outList.TCollection);
+		ListNode<T>* _it = other.head->next;
 
-		for (size_t idx = 0; idx < len; idx++)
-			outList.Add(arr[idx]);
+		while(_it != nullptr)
+		{
+			this->tail->next = new ListNode<T>(_it->_val);
+			this->tail = this->tail->next;
+			_it = _it->next;
+		}
 
-		outList.CollectionSize = len;
+		this->CollectionSize = other.CollectionSize;
 	}
 	
-	static void MoveAndFreePrevious(List<T>& outList, T*& arr, size_t len)
+	~List() { this->Clear(); }
+
+	
+	/**
+	 * Adds item to List
+	 * @param item Item to be added to List
+	 */
+	void Add(T item)
 	{
-		if (outList.TCollection != nullptr)
-			free_heap(outList.TCollection);
+		if(head == nullptr)
+		{
+			head = new ListNode<T>(item);
+			tail = head;
+		}
 
-		for (size_t idx = 0; idx < len; idx++)
-			outList.Add(arr[idx]);
+		ListNode<T>* node = new ListNode<T>(item);
+		this->tail->next = node;
+		this->tail = node;
 
-		outList.CollectionSize = len;
-		free_heap(arr);
-		arr = nullptr;
+		this->CollectionSize += 1;
+	}
+	
+	/**
+	 * Removes all occurences of given item in the List
+	 * @param item Item to be removed
+	 */
+	void Remove(T item)
+	{
+		if(head == nullptr)
+			return;
+
+		while (head->_val == item)
+		{
+			ListNode<T>* temp = head->next;
+			delete head;
+
+			head = temp;
+			this->CollectionSize -= 1;
+
+			if(head == nullptr)
+				return;
+		}
+
+		ListNode<T>* prev = head;
+		ListNode<T>* it = prev->next;
+		
+		while(it != nullptr)
+		{
+			if(it->_val == item)
+			{
+				ListNode<T>* temp = it;
+				
+				it = it->next;
+				prev->next = it;
+				
+				delete temp;
+				this->CollectionSize -= 1;
+
+				continue;
+			}
+
+			prev = it;
+			it = it->next;
+		}
+
+		this->tail = prev;
 	}
 
+	/** Erase List and frees memory occupied by its elements */
+	void Clear()
+	{
+		this->CollectionSize = 0;
+		this->tail = this->head;
+		
+		while(tail != nullptr)
+		{
+			ListNode<T>* temp = tail;
+			tail = tail->next;
+
+			delete temp;
+		}
+	}
+	
+	/** @return Count of elements in the List */
 	size_t GetCount()
 	{
 		return this->CollectionSize;
@@ -225,7 +168,47 @@ public:
 	T operator[](size_t idx)
 	{
 		if (idx >= this->CollectionSize)
-			return NULL;
-		return TCollection[idx];
+			return (T)0x0;
+
+		ListNode<T>* node = this->head;
+		
+		for(int i = 1; i < idx; i++)
+		{
+			node = node->next;
+			if(node == nullptr)
+				return (T)0x0;
+		}
+
+		return node->_val;
+	}
+
+	List<T>& operator=(const List<T>& other)
+	{
+		if(other != this)
+		{
+			this->Clear();
+
+			ListNode<T>* current = other.head;
+			while (current != nullptr)
+			{
+				Add(current->value);
+				current = current->next;
+			}
+		}
+		
+		return *this;
+	}
+	
+	/**
+	 * Copies items from Array to new List instance
+	 * @param arr Array to be copied to List
+	 * @param len Length of the array
+	 * @return Array elements copied to List instance
+	 */
+	static List<T> Copy(T* arr, size_t len)
+	{
+		List<T> outList(arr, len);
+
+		return outList;
 	}
 };

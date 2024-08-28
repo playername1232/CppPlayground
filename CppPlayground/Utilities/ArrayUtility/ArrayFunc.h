@@ -31,7 +31,8 @@ void reverse_array(T* arr, size_t count, size_t size)
 template <typename T>
 void sort_array(T* arr, size_t len)
 {
-	assert(std::is_arithmetic<T>::value);
+	if(std::is_arithmetic_v<T> == false)
+		return;
 
 	for (size_t i = 0; i < len; i++) 
 	{

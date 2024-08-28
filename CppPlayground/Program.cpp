@@ -8,6 +8,7 @@
 #include "Utilities/Dynamic String Lib/DynamicStringLibrary.h"
 #include "Utilities/MacroUtility/CustomMacros.h"
 #include "Utilities/List Utility/List.h"
+#include "Utilities/CustomUtility.h"
 #include "Utilities/CustomMemoryAllocation/IMemory.h"
 
 using namespace std;
@@ -34,7 +35,9 @@ void TestDynamicStringAllocation()
     const char* compared = DynamicStringLibrary::CompareDynamicString("abce", "abcde") ? "true" : "false";
     cout << "Compared: " << compared << '\n';
 
-    char* reverse = DynamicStringLibrary::ReverseDynamicString("abcde");
+    char arr[6] = { 'a', 'b', 'c', 'd', 'e' };
+    
+    char* reverse = DynamicStringLibrary::ReverseDynamicString(arr);
     cout << "Reversed: " << reverse << '\n';
 }
 
@@ -153,20 +156,58 @@ void TestIMemory()
     cout << "mem[5] after change: " << mem[5] << endl;
 
 }
+
+void TestListFunctionality()
+{
+    int arr[10] = { 0, 0, 0, 3, 4, 5, 5, 5, 8, 9 };
+
+    List<int> myList = List<int>::Copy(arr, 10);
+
+    List<int> copy = myList;
+    
+    myList.Add(50);
+    myList.Remove(5);
+    
+    int len = static_cast<int>(myList.GetCount());
+
+    List<int> copyWithZero(myList);
+    
+    myList.Remove(0);
+    myList.Remove(0);
+    copy.Remove(0);
+
+    int zeroArr[5] = { 0, 0, 0, 0, 0 };
+
+    List<int> allZeroes(zeroArr, 5);
+    allZeroes.Remove(0);
+    allZeroes.Remove(740);
+}
+
+void TestListFunctionalityTwo()
+{
+    string arr[10] = { "prvni", "druhy", "treti", "ctvrty", "paty", "sesty", "sedmy", "prvni", "prvni", "devet" };
+
+    List<string> myList = List<string>::Copy(arr, 10);
+
+    List<string> copy = myList;
+    
+    myList.Add("prvni");
+    myList.Remove("devet");
+    
+    int len = static_cast<int>(myList.GetCount());
+
+    List<string> copyWithZero(myList);
+    
+    myList.Remove("cau");
+    myList.Remove("prvni");
+    copy.Remove("treti");
+
+    List<string> empty;
+    List<string> copyOfEmpty(empty);
+}
+
 int main()
 {
-    char letter = 'A';
-    char converted = asciiToLower(letter);
-    
-    cout << "Original letter: " << letter << " Converted letter: " << converted << "\n\n";
-
-    char str[11] = "0123456789";
-    char* copy = nullptr;
-    strcpy_c(copy, str);
-
-    cout << "Copy of the string is = " << copy << "\n";
-
-    cout << "Reversed string = " << reverse_str(copy) << "\n";
     
     return 0;
 }
