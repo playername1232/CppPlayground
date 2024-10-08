@@ -22,9 +22,9 @@ public:
 
     /// \brief 
     /// \param entry Number for conversion represented in binary 
-    /// \param bitSize Bit size of result - Can cause overflow if number actual size overflows return type bitSize
+    /// \param strLen Bit size of result - Can cause overflow if number actual size overflows return type bitSize
     /// \return Decimal number - long
-    static UINT64 BinToDec(char* entry, const int bitSize);
+    static UINT64 BinToDec(char* entry, const int strLen);
 
     /// \brief 
     /// \tparam T item data type

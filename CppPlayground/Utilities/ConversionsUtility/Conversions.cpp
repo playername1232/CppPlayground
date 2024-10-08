@@ -15,16 +15,16 @@ char* Conversions::LongToString(long number)
     return reverse_str(res.GetContent());
 }
 
-UINT64 Conversions::BinToDec(char* entry, int bitSize)
+UINT64 Conversions::BinToDec(char* entry, int strLen)
 {
-    if(bitSize <= 0)
+    if(strLen <= 0)
         return 0;
 
     UINT64 result = 0;
-        
-    for(int i = 0; i < bitSize || entry[i] != '\0'; i++)
+    
+    for(int i = 0; i < strLen || entry[i] != '\0'; i++)
     {
-        result += (entry[i] - '0') & 0x1;
+        result += (entry[i] - '0' & 0x1) << ((strLen - 1) - i);
     }
 
     return result;
@@ -44,7 +44,7 @@ UINT64 Conversions::HexToDec(char* hex)
     if(len == 0)
         return 0l;
     
-    auto valOfHex = [_cVal, _iVal](char _c) -> int
+    auto valOfHex = [&_cVal, &_iVal](char _c) -> int
     {
         for(int i = 0; i < 16; i++)
         {
