@@ -79,6 +79,8 @@ public:
     char* GetContent() const { return this->content; }
     size_t GetSize() const { return this->contentSize; }
 
+    char* CopyContent() const;
+    
     void operator=(const char* entry);
     void operator+=(const char* entry);
     void operator+=(const char entry);

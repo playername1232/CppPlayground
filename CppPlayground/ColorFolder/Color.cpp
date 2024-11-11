@@ -33,9 +33,7 @@ char* Color::GetHexCode() const
     res += Conversions::DecToHex(this->green, 8);
     res += Conversions::DecToHex(this->blue, 8);
     
-    char* result = (char*)allocate_heap_clean(res.GetSize(), 1);
-    strcpy_s(result, res.GetSize() + 1, res.GetContent());
-    return result;
+    return res.CopyContent();
 }
 
 

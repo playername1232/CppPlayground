@@ -12,7 +12,7 @@ char* Conversions::LongToString(long number)
         number /= 10;
     }
     
-    return reverse_str(res.GetContent());
+    return reverse_str(res.CopyContent());
 }
 
 UINT64 Conversions::BinToDec(char* entry, int strLen)
@@ -66,6 +66,9 @@ UINT64 Conversions::HexToDec(char* hex)
 // Non-functional 2be finished!
 char* Conversions::BeautyPrintBinary(char* binary, int len)
 {
+    if(len <= 0)
+        return nullptr;
+    
     if(str_contains(binary, ' '))
     {
         std::cout << "Number binary representation already contains space character!";

@@ -198,21 +198,19 @@ public:
 	 * @param memFreedCallback Pointer to Callback function called when: Memory is freed 
 	 * @return Pointer to new Memory object 
 	 */
-	template<typename _From>
-	static IMemory* CopyTo(IMemory<_From>* src, 
+	template<typename _To>
+	static IMemory* CopyToNew(IMemory<T>* src, 
 							void (*memAllocCallback)() = nullptr,
 							void (*memEditCallback)() = nullptr,
 							void (*memFreedCallback)() = nullptr)
 	{
-		IMemory<T>* mem = new IMemory<T>(src->GetMemorySize());
+		IMemory<_To> mem = IMemory<_To>(src->size, memAllocCallback, memEditCallback, memFreedCallback);
 
-		for (int i = 0; i < src->GetMemorySize(); i++)
+		for (int i = 0; i < src->size; i++)
 		{
 			mem[i] = 0x0;
 
-			int srcBitSize = (src->GetMemoryByteSize() * 8);
-			
-			size_t _cpyBits = mem->bitSize > srcBitSize ? srcBitSize : mem->bitSize;
+			size_t _cpyBits = mem->bitSize > src->bitSize ? src->bitSize : mem->bitSize;
 			for (int j = 0; j < _cpyBits; j++)
 			{
 				mem[i] |= (src[i] >> j) & 1;

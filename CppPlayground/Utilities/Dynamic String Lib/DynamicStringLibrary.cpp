@@ -226,10 +226,19 @@ DynamicStringLibrary::~DynamicStringLibrary()
 		free(this->content);
 }
 
-/*DynamicStringLibrary::~DynamicStringLibrary()
+
+/** @return Pointer to copy of DynamicString content */
+char* DynamicStringLibrary::CopyContent() const
 {
-	free_heap(this->content);
-}*/
+	char* ret = static_cast<char*>(calloc(this->contentSize, 1));
+
+	if(ret == nullptr)
+		return nullptr;
+	
+	strcpy_s(ret, this->contentSize, this->content);
+
+	return ret;
+}
 
 void DynamicStringLibrary::operator=(const char* entry)
 {
