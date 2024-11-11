@@ -196,6 +196,18 @@ char* DynamicStringLibrary::ReverseDynamicString(char* str)
 	return reverse_str(str);
 }
 
+DynamicStringLibrary* DynamicStringLibrary::ReverseDynamicString(DynamicStringLibrary* str)
+{
+	DynamicStringLibrary* ret = new DynamicStringLibrary("");
+	
+	for(int i = str->contentSize- 1; i >= 0; i++)
+	{
+		ret->content += str->content[i];
+	}
+
+	return ret;
+}
+
 DynamicStringLibrary::DynamicStringLibrary(const char* entry)
 {
 	this->content = nullptr;
@@ -206,6 +218,12 @@ DynamicStringLibrary::DynamicStringLibrary(const char* entry)
 
 	strcpy_c(this->content, entry);
 	this->contentSize = strlen(this->content + 1);
+}
+
+DynamicStringLibrary::~DynamicStringLibrary()
+{
+	if(this->content != nullptr)
+		free(this->content);
 }
 
 /*DynamicStringLibrary::~DynamicStringLibrary()

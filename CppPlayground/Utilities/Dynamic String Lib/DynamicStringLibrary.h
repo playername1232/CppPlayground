@@ -70,8 +70,10 @@ public:
     /// <returns>Dynamically created Memory pointer to reveresed string</returns>
     static char* ReverseDynamicString(char* str);
 
+    static DynamicStringLibrary* ReverseDynamicString(DynamicStringLibrary* str);
+
     DynamicStringLibrary(const char* entry);
-    //~DynamicStringLibrary();
+    ~DynamicStringLibrary();
 
     // For now until I find out what's wrong with operator* overload
     char* GetContent() const { return this->content; }
