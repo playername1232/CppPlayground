@@ -208,6 +208,8 @@ DynamicStringLibrary* DynamicStringLibrary::ReverseDynamicString(DynamicStringLi
 	return ret;
 }
 
+DynamicStringLibrary::DynamicStringLibrary() = default;
+
 DynamicStringLibrary::DynamicStringLibrary(const char* entry)
 {
 	this->content = nullptr;
@@ -240,7 +242,7 @@ char* DynamicStringLibrary::CopyContent() const
 	return ret;
 }
 
-void DynamicStringLibrary::operator=(const char* entry)
+auto DynamicStringLibrary::operator=(const char* entry) -> void
 {
 	if(strlen(entry) == 0)
 	{
@@ -294,6 +296,16 @@ void DynamicStringLibrary::operator+=(const char entry)
 {
 	if(entry == '\0')
 		return;
+
+	if(this->content == nullptr)
+	{
+		this->content = static_cast<char*>(allocate_heap_clean(2, 1));
+		this->contentSize = 2;
+		this->content[0] = entry;
+		this->content[1] = '\0';
+
+		return;
+	}
 	
 	this->content = static_cast<char*>(reallocate_heap_block(this->content, this->contentSize + 1, 1));
 	this->content[contentSize - 1] = entry;

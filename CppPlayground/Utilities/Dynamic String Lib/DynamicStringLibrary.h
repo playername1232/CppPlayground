@@ -6,8 +6,8 @@
 class DynamicStringLibrary
 {
 private: // members
-    char* content;
-    size_t contentSize;
+    char* content = nullptr;
+    size_t contentSize = 0;
 
 public:
     /// <summary>
@@ -72,6 +72,7 @@ public:
 
     static DynamicStringLibrary* ReverseDynamicString(DynamicStringLibrary* str);
 
+    DynamicStringLibrary();
     DynamicStringLibrary(const char* entry);
     ~DynamicStringLibrary();
 

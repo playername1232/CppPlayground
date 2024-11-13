@@ -63,34 +63,37 @@ UINT64 Conversions::HexToDec(char* hex)
     return result;
 }
 
+bool CheckIsBinary(const char _c)
+{
+    return _c >= '0' && _c <= '1';
+}
+
 // Non-functional 2be finished!
 char* Conversions::BeautyPrintBinary(char* binary, int len)
 {
     if(len <= 0)
         return nullptr;
     
-    if(str_contains(binary, ' '))
+    int counter = 0;
+    DynamicStringLibrary builder = "";
+    for(int i = 0; i < len; i++)
     {
-        std::cout << "Number binary representation already contains space character!";
-        return binary;
-    }
-    // len / 4 = Number of nibbles = (32bit / 4) = 8 nibbles (8 nibbles = 7 spaces between nibbles + 1 for null terminator)
-
-    const int resLen = len + (len / 4);
-    char* res = static_cast<char*>(allocate_heap_clean(resLen, 1));
-    
-    for (int i = len, idx = resLen - 1; i >= 0; i--, idx--)
-    {
-        if((i + 1) % 4 == 0)
+        if(CheckIsBinary(binary[i]) == false)
         {
-            res[idx] = ' ';
-            idx -= 1;
+            std::cout << "Number binary representation already contains space character!";
+            return nullptr;
         }
-
-        res[idx] = binary[i];
+        
+        counter++;
+        builder += binary[i];
+        
+        if(counter == 4)
+        {
+            builder += ' ';
+            counter = 0;
+        }
     }
 
-    res[resLen - 1] = '\0';
-
+    char* res = builder.CopyContent();    
     return res;
 }

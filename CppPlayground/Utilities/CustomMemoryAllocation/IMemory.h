@@ -24,8 +24,7 @@ public:
 							      memoryEditedCallback(memEditCallback), 
 								  memoryFreedCallback(memFreedCallback)
 	{
-		if(size == 0)
-			return;
+		check_size(size);
 
 		ptr = (T*)allocate_heap_clean(size, sizeof(T));
 		end = ptr + size;
@@ -38,7 +37,6 @@ public:
 
 	~IMemory()
 	{
-		free_heap(ptr);
 		if (this->memoryFreedCallback != nullptr)
 			this->memoryFreedCallback();
 	}
@@ -183,7 +181,7 @@ public:
 			}
 			catch (std::exception& e)
 			{
-				std::cerr << "Exception: " << e.what() << '\n';
+				std::cerr << "Exception: " << e.what() << std::endl;
 			}
 		}
 		return ptr[idx];
