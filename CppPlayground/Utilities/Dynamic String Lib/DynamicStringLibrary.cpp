@@ -1,7 +1,7 @@
 #include "DynamicStringLibrary.h"
 #include <iostream>
-#include <cctype>
 
+#include "../../Utilities/CustomUtility.h"
 #include "../ArrayUtility/ArrayFunc.h"
 #include "../MacroUtility/CustomMacros.h"
 
@@ -190,6 +190,13 @@ DynamicStringLibrary::DynamicStringLibrary(const char* entry)
 
 	strcpy_c(this->content, entry);
 	this->contentSize = strlen(this->content + 1);
+}
+
+DynamicStringLibrary::DynamicStringLibrary(const DynamicStringLibrary& other)
+{
+	this->content = nullptr;
+	strcpy_c(this->content, other.content);
+	this->contentSize = other.GetSize();
 }
 
 DynamicStringLibrary::~DynamicStringLibrary()

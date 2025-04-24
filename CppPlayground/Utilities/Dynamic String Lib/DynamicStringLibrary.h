@@ -74,7 +74,7 @@ public:
 
     DynamicStringLibrary();
     DynamicStringLibrary(const char* entry);
-    DynamicStringLibrary(const DynamicStringLibrary&) = delete;
+    DynamicStringLibrary(const DynamicStringLibrary& other);
     DynamicStringLibrary& operator=(const DynamicStringLibrary&) = delete;
     ~DynamicStringLibrary();
 

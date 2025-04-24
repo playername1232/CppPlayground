@@ -3,32 +3,26 @@
 
 
 void strcpy_c(char*& dest, const char* src)
-{    
-    size_t strSize = strlen(src);
+{
+    if (src == nullptr)
+        return;
 
-    if(dest != nullptr)
+    size_t strSize = strlen(src) + 1; // +1 na '\0'
+
+    if (dest != nullptr)
     {
-        char* buffer = (char*)reallocate_heap_block(dest, strSize, 1);
-
+        char* buffer = static_cast<char*>(reallocate_heap_block(dest, strSize, 1));
         check(buffer);
         dest = buffer;
     }
     else
-        dest = (char*)allocate_heap_clean(strSize, 1);
-    
-    for(size_t i = 0; i < strSize; i++)
     {
-        dest[i] = src[i];
+        dest = static_cast<char*>(allocate_heap_clean(strSize, 1));
     }
-    if(dest[strSize - 1] != '\0')
-    {
-        char* buffer = (char*)reallocate_heap_block(dest, strSize + 1, 1);
-        check(buffer);
-        buffer[strSize] = '\0';
-        
-        dest = buffer;
-    }
+
+    memcpy(dest, src, strSize);
 }
+
 
 char asciiToUpper(char _c)
 {
