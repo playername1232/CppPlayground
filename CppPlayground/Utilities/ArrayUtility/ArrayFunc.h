@@ -2,8 +2,6 @@
 
 #ifndef ARRFUNCDEFINE
 #include "../MacroUtility/CustomMacros.h"
-#include "../CustomUtility.h"
-#include "../List Utility/List.h"
 #endif
 
 char* reverse_str(char* str);

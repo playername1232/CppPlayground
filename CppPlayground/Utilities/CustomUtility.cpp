@@ -16,7 +16,7 @@ void strcpy_c(char*& dest, const char* src)
     else
         dest = (char*)allocate_heap_clean(strSize, 1);
     
-    for(int i = 0; i < strSize; i++)
+    for(size_t i = 0; i < strSize; i++)
     {
         dest[i] = src[i];
     }
@@ -33,7 +33,7 @@ void strcpy_c(char*& dest, const char* src)
 char asciiToUpper(char _c)
 {
     if(_c >= 'a' && 'z' >= _c)
-        return _c - 32;
+        return (char)(_c - 32);
 
     return _c;
 }
@@ -41,7 +41,7 @@ char asciiToUpper(char _c)
 char asciiToLower(char _c)
 {
     if(_c >= 'A' && 'Z' >= _c)
-        return _c + 32;
+        return (char)(_c + 32);
 
     return _c;
 }

@@ -1,6 +1,4 @@
 #pragma once
-#include <cstdio>
-#include <cstring>
 #include "../Utilities/MacroUtility/CustomMacros.h"
 
 enum FileStatus : int

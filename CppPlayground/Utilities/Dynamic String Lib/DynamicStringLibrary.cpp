@@ -17,12 +17,12 @@ static void CheckForBufferOverflow(char*& arr, size_t index, int& bufferAllocSiz
 	check(arr);
 
 	// Edit: check_size_allow_zero(len) as index can be zero
-	check_size_allow_zero(index);
-	check_size(bufferAllocSize);
+	check_size_allow_zero(index)
+	check_size(bufferAllocSize)
 
-	if (index > (bufferAllocSize - 1)) // Index 9 = length 10 therefore max allocated size is 10
+	if (index > (size_t)(bufferAllocSize - 1)) // Index 9 = length 10, therefore, max allocated size is 10
 	{
-		bufferAllocSize += DEFAULT_ALLOC_BLOCK_SIZE;
+		bufferAllocSize += DEFAULT_ALLOC_BLOCK_SIZE
 		char* buffer = (char*)reallocate_heap_block(arr, bufferAllocSize, 1);
 		check(buffer);
 		arr = buffer;
@@ -41,7 +41,6 @@ char* DynamicStringLibrary::CreateDynamicString(const char* str, size_t len)
 
 	if (buffer != nullptr)
 	{
-		size_t idx = 0;
 		for (size_t idx = 0; idx < len; idx++)
 			buffer[idx] = str[idx];
 
@@ -60,38 +59,9 @@ char* DynamicStringLibrary::CreateDynamicString(const char* str, size_t len)
 
 char* DynamicStringLibrary::ConcatenateDynamicString(const char* str, const char* concate)
 {
-	int current_buffer_alloc = DEFAULT_ALLOC_BLOCK_SIZE;
-	size_t lastIndexOfStr = 0;
-
 	char* buffer = nullptr;
 
 	strcpy_c(buffer, str);
-	
-	/*size_t currentIndex = 0;
-	if (splitter != '\0')
-	{
-		CheckForBufferOverflow(buffer, currentIndex, current_buffer_alloc);
-
-		buffer[currentIndex] = splitter;
-		currentIndex += 1;
-	}
-
-
-	for (int i = 0; concate[i] != '\0'; i++, currentIndex += 1)
-	{
-		CheckForBufferOverflow(buffer, currentIndex, current_buffer_alloc);
-		buffer[currentIndex] = concate[i];
-	}
-
-	if (buffer[currentIndex] != '\0')
-	{
-		CheckForBufferOverflow(buffer, currentIndex, current_buffer_alloc);
-		buffer[currentIndex] = '\0';
-	}
-
-	// Resize the buffer to its content size 
-	buffer = (char*)reallocate_heap_block(buffer, currentIndex + 1, 1);*/
-
 	return buffer;
 }
 
@@ -104,7 +74,7 @@ void DynamicStringLibrary::DeleteDynamicString(const char** arrToFree, size_t nu
 void DynamicStringLibrary::ExtractFirstDynamicString(char*& str, const char* extractStr, size_t sizeExtract)
 {
 	size_t strSize = 0;
-	int foundSamples = 0;
+	size_t foundSamples = 0;
 	int startIndex = -1, endIndex = -1;
 
 	bool pass = false;
@@ -148,7 +118,7 @@ void DynamicStringLibrary::ExtractFirstDynamicString(char*& str, const char* ext
 	char* buffer = (char*)allocate_heap_clean(buffSize + 1, 1); // +1 for the null terminator
 
 	int bufferIndex = 0;
-	for (int i = 0; i < strSize; i++)
+	for (int i = 0; i < (int)strSize; i++)
 	{
 		if (i >= startIndex && i <= endIndex)
 		{
@@ -182,7 +152,7 @@ bool DynamicStringLibrary::CompareDynamicString(const char* str1, const char* st
 	if (lenStr1 != lenStr2)
 		return false;
 
-	for (int i = 0; i < lenStr1; i++)
+	for (size_t i = 0; i < lenStr1; i++)
 	{
 		if (str1[i] != str2[i])
 			return false;
@@ -200,7 +170,7 @@ DynamicStringLibrary* DynamicStringLibrary::ReverseDynamicString(DynamicStringLi
 {
 	DynamicStringLibrary* ret = new DynamicStringLibrary("");
 	
-	for(int i = str->contentSize- 1; i >= 0; i++)
+	for(int i = (int)str->contentSize - 1; i >= 0; i--)
 	{
 		ret->content += str->content[i];
 	}
@@ -242,7 +212,7 @@ char* DynamicStringLibrary::CopyContent() const
 	return ret;
 }
 
-auto DynamicStringLibrary::operator=(const char* entry) -> void
+DynamicStringLibrary& DynamicStringLibrary::operator=(const char* entry)
 {
 	if(strlen(entry) == 0)
 	{
@@ -252,7 +222,7 @@ auto DynamicStringLibrary::operator=(const char* entry) -> void
 		this->content = nullptr;
 		this->contentSize = 0;
 
-		return;
+		return *this;
 	}
 	
 	if (this->content != nullptr)
@@ -263,6 +233,8 @@ auto DynamicStringLibrary::operator=(const char* entry) -> void
 	
 	strcpy_c(this->content, entry);
 	this->contentSize = strlen(this->content);
+
+	return *this;
 }
 
 void DynamicStringLibrary::operator+=(const char* entry)
@@ -281,7 +253,7 @@ void DynamicStringLibrary::operator+=(const char* entry)
 	int arrayAlloc = (int)strlen(this->content) + (int)strlen(entry);
 	this->content = (char*)reallocate_heap_block(this->content, arrayAlloc + 1, 1);
 	
-	for (size_t i = strlen(this->content), j = 0; i < arrayAlloc; i++, j++)
+	for (int i = (int)strlen(this->content), j = 0; i < arrayAlloc; i++, j++)
 	{
 		CheckForBufferOverflow(this->content, i, arrayAlloc);
 

@@ -1,5 +1,4 @@
 #include "Conversions.h"
-#include "../CustomUtility.h"
 #include "../ArrayUtility/ArrayFunc.h"
 
 char* Conversions::LongToString(long number)
@@ -8,7 +7,7 @@ char* Conversions::LongToString(long number)
 
     while(number != 0)
     {
-        res += (number % 10) + '0';
+        res += (char)((number % 10) + '0');
         number /= 10;
     }
     

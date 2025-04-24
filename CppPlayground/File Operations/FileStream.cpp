@@ -18,9 +18,9 @@ char* FileStream::ReadAllText(const char* filePath)
     size_t buffIdx = 0;
 
     FILE* file; 
-    fopen_s(&file, filePath, "r");
+    int opened = fopen_s(&file, filePath, "r");
 
-    if (file == nullptr)
+    if (opened != 0)
         return nullptr;
 
     while (!feof(file))
@@ -33,11 +33,14 @@ char* FileStream::ReadAllText(const char* filePath)
         }
 
         char* pomBuffer = static_cast<char*>(allocate_heap_clean(1, 1));
-        fread(pomBuffer, 1, 1, file);
+        size_t read = fread(pomBuffer, 1, 1, file);
 
-        buffer[buffIdx] = pomBuffer[0];
+        if (read != 0)
+        {
+            buffer[buffIdx] = pomBuffer[0];
 
-        buffIdx += 1;
+            buffIdx += 1;
+        }
 
         free(pomBuffer);
     }
@@ -64,9 +67,6 @@ char** FileStream::ReadAllLines(const char* filePath)
     // After reading is done, resize the pointer to file line according to string's length
     // Always allocate one line by one. Next line = alloc += 1;
 
-    // Declaration
-    char** buffer = nullptr;
-
     FILE* file;
     errno_t res = fopen_s(&file, filePath, "r");
     
@@ -79,7 +79,7 @@ char** FileStream::ReadAllLines(const char* filePath)
     int fileLine  = 0;
     int lineAlloc = 500;
 
-    buffer = (char**)allocate_heap_clean(1, sizeof(char*));
+    char** buffer = (char**)allocate_heap_clean(1, sizeof(char*));
     buffer[0] = (char*)allocate_heap_clean(500, 1);
 
     for (int idx = 0; !feof(file); idx++, fileIdx++)
@@ -87,38 +87,49 @@ char** FileStream::ReadAllLines(const char* filePath)
         //char* pomBuffer = (char*)allocate_heap_clean(1, 1);
 
         char* buffCharacter = (char*)allocate_heap_clean(2, 1);
-        fread(buffCharacter, 1, 1, file);
+        size_t read = fread(buffCharacter, 1, 1, file);
 
-        if (lineAlloc - 1 == fileIdx)
+        if (read != 0)
         {
-            buffer[fileLine] = buffCharacter[0] == '\n' ?
-                (char*)reallocate_heap_block(buffer[fileLine], lineAlloc += 1, 1) :
-                (char*)reallocate_heap_block(buffer[fileLine], lineAlloc += 500, 1);
-        }
+            if (lineAlloc - 1 == fileIdx)
+            {
+                buffer[fileLine] = buffCharacter[0] == '\n' ?
+                    (char*)reallocate_heap_block(buffer[fileLine], lineAlloc += 1, 1) :
+                    (char*)reallocate_heap_block(buffer[fileLine], lineAlloc += 500, 1);
+            }
 
-        if (buffCharacter[0] == '\n')
-        {
-            buffer[fileLine][fileIdx] = '\0';
+            if (buffCharacter[0] == '\n')
+            {
+                buffer[fileLine][fileIdx] = '\0';
 
-            // Reallocate - Let buffer have allocated only space it needs for storge
-            buffer[fileLine] = (char*)reallocate_heap_block(buffer[fileLine], fileIdx + 1, 1);
-            fileLine += 1;
-            fileIdx = -1; // Increased at the end of the loop to 0
+                // Reallocate - Let buffer has allocated only space it needs for storge
+                buffer[fileLine] = (char*)reallocate_heap_block(buffer[fileLine], fileIdx + 1, 1);
+                fileLine += 1;
+                fileIdx = -1; // Increased at the end of the loop to 0
 
-            // fileLine starts at index 0. 0th index = reading 1st line
-            // 2nd line in file = fileLine = 1 + 1
-            buffer = (char**)reallocate_heap_block(buffer, fileLine + 1, sizeof(char*));
-            buffer[fileLine] = (char*)allocate_heap_clean(500, 1);
-        }
-        else
-        {
-            buffer[fileLine][fileIdx] = buffCharacter[0];
+                // fileLine starts at index 0. 0th index = reading 1st line
+                // 2nd line in file = fileLine = 1 + 1
+                buffer = (char**)reallocate_heap_block(buffer, fileLine + 1, sizeof(char*));  // NOLINT(bugprone-multi-level-implicit-pointer-conversion)
+                buffer[fileLine] = (char*)allocate_heap_clean(500, 1);
+            }
+            else
+            {
+                buffer[fileLine][fileIdx] = buffCharacter[0];
+            }
         }
     }
     // Reallocate last line
     buffer[fileLine] = (char*)reallocate_heap_block(buffer[fileLine], fileIdx + 1, 1);
 
-    fclose(file);
+    size_t closed = fclose(file);
+
+    if (closed == 0)
+    {
+        std::ostringstream oss{};
+        oss << "Couldn't close file " << filePath;
+        throw std::runtime_error(oss.str());
+    }
+    
     return buffer;
 }
 
@@ -126,9 +137,9 @@ char** FileStream::ReadAllLines(const char* filePath)
 void FileStream::WriteAllText(const char* filePath, const char* text)
 {
     FILE* fPtr;
-    fopen_s(&fPtr, filePath, "w");
+    size_t opened = fopen_s(&fPtr, filePath, "w");
 
-    if (fPtr == nullptr)
+    if (opened != 0 || fPtr == nullptr)
     {
         std::ostringstream oss{};
         oss << __FUNCTION__ << ": Opening file " << filePath << "failed!";
@@ -136,18 +147,32 @@ void FileStream::WriteAllText(const char* filePath, const char* text)
         throw std::runtime_error(oss.str());
     }
 
-    fwrite(text, 1, strlen(text), fPtr);
-    fclose(fPtr);
+    size_t wrote = fwrite(text, 1, strlen(text), fPtr);
+
+    if (wrote != strlen(text))
+    {
+        std::ostringstream oss{};
+        oss << __FUNCTION__ << ": Writing text to file " << filePath << "failed!";
+
+        throw std::runtime_error(oss.str());
+    }
+    
+    int closed = fclose(fPtr);
+    if (closed == EOF)
+    {
+        std::ostringstream oss{};
+        oss << __FUNCTION__ << ": Closing file " << filePath << "failed!";
+
+        throw std::runtime_error(oss.str());
+    }
 }
 
 void FileStream::WriteAllLines(const char* filePath, const char** content, size_t n_lines)
 {
-    size_t buffIdx = 0;
-
     FILE* file;
-    fopen_s(&file, filePath, "w");
+    size_t opened = fopen_s(&file, filePath, "w");
 
-    if (file == nullptr)
+    if (opened != 0)
         return;
 
     size_t allocSize    = 500;
@@ -155,7 +180,7 @@ void FileStream::WriteAllLines(const char* filePath, const char** content, size_
 
     char* stringBuilder = (char*)allocate_heap_clean(allocSize, 1);
 
-    for (int line = 0; line < n_lines; line++)
+    for (size_t line = 0; line < n_lines; line++)
     {
         for (int idx = 0; content[line][idx] != '\0'; idx++, currentIndex++)
         {
@@ -170,9 +195,24 @@ void FileStream::WriteAllLines(const char* filePath, const char** content, size_
         }
     }
 
-    fwrite(stringBuilder, 1, currentIndex + 1, file);
+    size_t wrote = fwrite(stringBuilder, 1, currentIndex + 1, file);
+    if (wrote != currentIndex + 1)
+    {
+        std::ostringstream oss{};
+        oss << __FUNCTION__ << ": Writing text to file " << filePath << "failed!";
 
-    fclose(file);
+        throw std::runtime_error(oss.str());
+    }
+
+    int closed = fclose(file);
+    if (closed == EOF)
+    {
+        std::ostringstream oss{};
+        oss << __FUNCTION__ << ": Closing file " << filePath << "failed!";
+
+        throw std::runtime_error(oss.str());
+    }
+    
     free(stringBuilder);
 }
 
@@ -192,7 +232,16 @@ FileStream::FileStream(std::string filePath)
 FileStream::~FileStream()
 {
     if(this->fileStatus == FileStatus::Opened)
-        fclose(this->filePtr);
+    {
+        int closed = fclose(this->filePtr);
+        if (closed == EOF)
+        {
+            std::ostringstream oss{};
+            oss << __FUNCTION__ << ": Closing file " << this->filePath << "failed!";
+
+            throw std::runtime_error(oss.str());
+        }
+    }
 
     free(filePath);
 }
@@ -204,9 +253,7 @@ bool FileStream::OpenFile(FileOpenMode openMode)
     
     if (fileStatus == FileStatus::Closed)
     {
-        fopen_s(&this->filePtr, this->filePath, mode);
-
-        bool opened = filePtr != nullptr;
+        bool opened = fopen_s(&this->filePtr, this->filePath, mode) == 0 && this->filePtr != nullptr;
 
         fileStatus = opened ? FileStatus::Opened : FileStatus::Closed;
         return opened;
@@ -223,7 +270,14 @@ bool FileStream::CloseFile()
         return false;
     }
 
-    fclose(this->filePtr);
+    int closed = fclose(this->filePtr);
+    if (closed == EOF)
+    {
+        std::ostringstream oss{};
+        oss << __FUNCTION__ << ": Closing file " << this->filePath << "failed!";
+
+        throw std::runtime_error(oss.str());
+    }
     // Unbind ptr to an opened file
     this->filePtr = nullptr;
 

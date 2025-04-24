@@ -1,8 +1,10 @@
 // ReSharper disable CppMultiCharacterLiteral
 #include "AsyncTest.h"
+#include <iostream>       // std::cout
+#include <thread>         // std::thread
+#include <future>         // std::promise, std::future
 
 using namespace std;
-using namespace std::chrono_literals;
 
 void AsyncTest::Test1()
 {

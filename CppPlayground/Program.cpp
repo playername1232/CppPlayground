@@ -21,9 +21,6 @@ void TestDynamicStringAllocation()
 
     cout << "myarr = " << myarr << '\n';
 
-    char* res = DynamicStringLibrary::ConcatenateDynamicString(myarr, myarr2, ' ');
-    cout << "res = " << res << '\n';
-
     char* toExtract = DynamicStringLibrary::CreateDynamicString("afgabcde", 9);
     DynamicStringLibrary::ExtractFirstDynamicString(toExtract, "ab", 2);
     cout << "toExtract: " << toExtract << '\n';

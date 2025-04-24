@@ -18,8 +18,8 @@ Color::Color(uint8_t red, uint8_t green, uint8_t blue)
 
 Color::Color(char* hexCode)
 {
-    // 32 bits are enough to store values for 8bit RGB therefore the 32 bit loss is not important
-    uint32_t colorDec = Conversions::HexToDec(hexCode);
+    // 32 bits are enough to store values for 8bit RGB, therefore, the 32-bit loss is not important
+    uint32_t colorDec = (uint32_t)Conversions::HexToDec(hexCode);
 
     this->red = (colorDec >> 16) & 0xFF;
     this->green = (colorDec >> 8) & 0xFF;

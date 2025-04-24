@@ -1,11 +1,6 @@
 #pragma once
-#ifndef MALLOCDEF
-#include <malloc.h>
-#include "../MacroUtility/CustomMacros.h"
-#endif
 
 #ifndef STREAMDEF
-#include <iostream>
 #include <sstream>
 #endif
 
@@ -46,10 +41,9 @@ public:
 
 		ListNode<T>* prev = tail;
 
-		for(int i = 1; i < arrSize; i++)
+		for(size_t i = 1; i < arrSize; i++)
 		{
 			tail->next = new ListNode<T>(tArray[i]);
-			prev = tail;
 			tail = tail->next;
 		}
 
@@ -182,20 +176,9 @@ public:
 		return node->_val;
 	}
 
-	List<T>& operator=(const List<T>& other)
+	List<T>& operator=(const List<T> other)
 	{
-		if(other != this)
-		{
-			this->Clear();
-
-			ListNode<T>* current = other.head;
-			while (current != nullptr)
-			{
-				Add(current->value);
-				current = current->next;
-			}
-		}
-		
+		std::swap(this->head, other.head);
 		return *this;
 	}
 	

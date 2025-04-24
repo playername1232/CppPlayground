@@ -74,6 +74,8 @@ public:
 
     DynamicStringLibrary();
     DynamicStringLibrary(const char* entry);
+    DynamicStringLibrary(const DynamicStringLibrary&) = delete;
+    DynamicStringLibrary& operator=(const DynamicStringLibrary&) = delete;
     ~DynamicStringLibrary();
 
     // For now until I find out what's wrong with operator* overload
@@ -82,7 +84,7 @@ public:
 
     char* CopyContent() const;
     
-    void operator=(const char* entry);
+    DynamicStringLibrary& operator=(const char* entry);
     void operator+=(const char* entry);
     void operator+=(const char entry);
     char* operator*();

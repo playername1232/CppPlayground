@@ -1,4 +1,8 @@
 #pragma once
+#include <iosfwd>
+#include <sstream>
+#include <stdexcept>
+
 inline bool str_contains(char* _s, char _c)
 {
     for(int i = 0; _s[i] != '\0'; i++)

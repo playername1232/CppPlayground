@@ -1,3 +1,5 @@
+#ifndef IMEMORY_H
+#define IMEMORY_H
 #include "../MacroUtility/CustomMacros.h"
 #include <iostream>
 #include <sstream>
@@ -24,7 +26,7 @@ public:
 							      memoryEditedCallback(memEditCallback), 
 								  memoryFreedCallback(memFreedCallback)
 	{
-		check_size(size);
+		check_size(size)
 
 		ptr = (T*)allocate_heap_clean(size, sizeof(T));
 		end = ptr + size;
@@ -51,10 +53,10 @@ public:
 	}
 
 	/// <summary>
-	/// Retrieves a pointer to either the last item in the allocated memory pool or the first memory block outside of the allocated heap block.
+	/// Retrieves a pointer to either the last item in the allocated memory pool or the first memory block outside the allocated heap block.
 	/// </summary>
-	/// <param name="lastItem">Determiners whether to get pointer to last item in memory or get pointer to first memory block outside of the allocated heap block</param>
-	/// <returns>Returns either pointer to last item in the pool or the first memory block outside of the allocated heap block</returns>
+	/// <param name="lastItem">Determiners whether to get a pointer to last item in memory or get a pointer to the first memory block outside the allocated heap block</param>
+	/// <returns>Returns either pointer to last item in the pool or the first memory block outside the allocated heap block</returns>
 	T* GetEndOfHeap(bool lastItem = false)
 	{
 		if (lastItem)
@@ -181,7 +183,7 @@ public:
 			}
 			catch (std::exception& e)
 			{
-				std::cerr << "Exception: " << e.what() << std::endl;
+				std::cerr << "Exception: " << e.what() << '\n';
 			}
 		}
 		return ptr[idx];
@@ -189,27 +191,27 @@ public:
 
 	
 	/**
-	 * @tparam _To New data type
+	 * @tparam To New data type
 	 * @param src IMemory type Source
 	 * @param memAllocCallback Pointer to Callback function called when: New Memory allocation / reallocation occurs
 	 * @param memEditCallback Pointer to Callback function called when: Memory is edited
 	 * @param memFreedCallback Pointer to Callback function called when: Memory is freed 
 	 * @return Pointer to a new Memory object 
 	 */
-	template<typename _To>
+	template<typename To>
 	static IMemory* CopyToNew(IMemory<T>* src, 
 							void (*memAllocCallback)() = nullptr,
 							void (*memEditCallback)() = nullptr,
 							void (*memFreedCallback)() = nullptr)
 	{
-		IMemory<_To> mem = IMemory<_To>(src->size, memAllocCallback, memEditCallback, memFreedCallback);
+		IMemory<To> mem = IMemory<To>(src->size, memAllocCallback, memEditCallback, memFreedCallback);
 
-		for (int i = 0; i < src->size; i++)
+		for (size_t i = 0; i < src->size; i++)
 		{
 			mem[i] = 0x0;
 
 			size_t _cpyBits = mem->bitSize > src->bitSize ? src->bitSize : mem->bitSize;
-			for (int j = 0; j < _cpyBits; j++)
+			for (size_t j = 0; j < _cpyBits; j++)
 			{
 				mem[i] |= (src[i] >> j) & 1;
 			}
@@ -226,7 +228,7 @@ public:
 										void (*memFreedCallback)() = nullptr)
 	{
 		check(ptr);
-		check_size(size);
+		check_size(size)
 
 		IMemory* mem = new IMemory<T>(size, memAllocCallback, memEditCallback, memFreedCallback);
 
@@ -239,3 +241,4 @@ public:
 	}
 };
 
+#endif // IMEMORY_H
