@@ -44,7 +44,6 @@ public:
         for(int i = bitSize; i >= 0; i -= 4)
         {
             // Shift nibbles i times
-            char pomCharmask = mask[(item >> i) & 0xF];
             res += mask[(item >> i) & 0xF];
         }
         

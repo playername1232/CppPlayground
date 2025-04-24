@@ -42,7 +42,7 @@ char* FileStream::ReadAllText(const char* filePath)
         free(pomBuffer);
     }
 
-    if (buffer[buffIdx] != '\0') // If last character read from file isn't null terminator
+    if (buffer[buffIdx] != '\0') // If the last character read from a file isn't null terminator
     {
         if (buffIdx + 1 == allocSize)
             buffer = (char*)reallocate_heap_block(buffer, allocSize + 1, 1);
@@ -53,7 +53,7 @@ char* FileStream::ReadAllText(const char* filePath)
 
     buffer = (char*)reallocate_heap_block(buffer, buffIdx + 1, 1);
 
-    fclose(file);
+    fclose(file);  // NOLINT(cert-err33-c)
     return buffer;
 }
 
@@ -68,7 +68,10 @@ char** FileStream::ReadAllLines(const char* filePath)
     char** buffer = nullptr;
 
     FILE* file;
-    fopen_s(&file, filePath, "r");
+    errno_t res = fopen_s(&file, filePath, "r");
+    
+    if (res == 0)
+        return nullptr;
 
     check(file);
 
@@ -102,7 +105,7 @@ char** FileStream::ReadAllLines(const char* filePath)
             fileLine += 1;
             fileIdx = -1; // Increased at the end of the loop to 0
 
-            // fileLine starts at 0 index. 0th index = reading 1st line
+            // fileLine starts at index 0. 0th index = reading 1st line
             // 2nd line in file = fileLine = 1 + 1
             buffer = (char**)reallocate_heap_block(buffer, fileLine + 1, sizeof(char*));
             buffer[fileLine] = (char*)allocate_heap_clean(500, 1);

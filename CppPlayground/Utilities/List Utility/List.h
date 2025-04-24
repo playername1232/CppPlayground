@@ -41,7 +41,7 @@ public:
 			this->tail = nullptr;
 		}
 
-		this->head = new ListNode(tArray[0]);
+		this->head = new ListNode<T>(tArray[0]);
 		this->tail = head;
 
 		ListNode<T>* prev = tail;

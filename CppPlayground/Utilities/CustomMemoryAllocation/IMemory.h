@@ -66,11 +66,11 @@ public:
 		return end;
 	}
 
-	size_t GetMemorySize()			{ return this->size; }
+	size_t GetMemorySize()				{ return this->size; }
 
 	size_t GetMemoryElementBitSize()	{ return this->bitSize; }
 
-	size_t GetMemoryByteSize()		{ return this->size * sizeof(T); }
+	size_t GetMemoryByteSize()			{ return this->size * sizeof(T); }
 
 
 	void ANDMemValue(T mask, size_t offset)
@@ -194,7 +194,7 @@ public:
 	 * @param memAllocCallback Pointer to Callback function called when: New Memory allocation / reallocation occurs
 	 * @param memEditCallback Pointer to Callback function called when: Memory is edited
 	 * @param memFreedCallback Pointer to Callback function called when: Memory is freed 
-	 * @return Pointer to new Memory object 
+	 * @return Pointer to a new Memory object 
 	 */
 	template<typename _To>
 	static IMemory* CopyToNew(IMemory<T>* src, 
@@ -218,10 +218,12 @@ public:
 		return mem;
 	}
 
-	static IMemory* CreateMemoryBlock(T* ptr, size_t size, 
-											  void (*memAllocCallback)() = nullptr,
-											  void (*memEditCallback)()  = nullptr,
-											  void (*memFreedCallback)() = nullptr)
+	static IMemory* CreateMemoryBlock(
+										T* ptr,
+										size_t size, 
+										void (*memAllocCallback)() = nullptr,
+										void (*memEditCallback)()  = nullptr,
+										void (*memFreedCallback)() = nullptr)
 	{
 		check(ptr);
 		check_size(size);
