@@ -235,12 +235,7 @@ FileStream::~FileStream()
     {
         int closed = fclose(this->filePtr);
         if (closed == EOF)
-        {
-            std::ostringstream oss{};
-            oss << __FUNCTION__ << ": Closing file " << this->filePath << "failed!";
-
-            throw std::runtime_error(oss.str());
-        }
+            std::cerr << __FUNCTION__ << ": Closing file " << this->filePath << "failed!";
     }
 
     free(filePath);
